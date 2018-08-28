@@ -15,7 +15,7 @@ class SpriteSheet:
         Default constructor.
 
         Args:
-            file_name(str): relative os.path based on jazz.py file.        
+            file_name(str): relative os.path based on jazz.py file.
         """
         # background to transparent
         self.sprite_sheet = pygame.image.load(file_name).convert_alpha()

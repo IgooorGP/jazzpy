@@ -1,12 +1,13 @@
 """
 Main game module.
 """
-import sys
 import configparser
-import pygame
+import sys
 
-from sprites.jazz.jazz import Jazz
+import pygame
 from pygame.locals import *
+
+from models.jazz.jazz import Jazz
 
 # reads default configs
 pygame.init()
@@ -20,51 +21,28 @@ HEIGHT = config.getint("GAME_SCREEN", "HEIGHT")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))  # pygame.surface.Surface
 clock = pygame.time.Clock()  # creates a clock object for timing
 
-
-# jazz_x, jazz_y = 50, 50
-# jazz_img = pygame.image.load("jazz.png")
+# jazz sprite
 jazz = Jazz()
 
-game_loop = True
+# all sprites'group
+all_sprites = pygame.sprite.Group()
+all_sprites.add(jazz)
 
-move_right = False
-move_left = False
+is_game_running = True
 
-while game_loop:
+# main game loop
+while is_game_running:
 
     # updates the screen surface to a new state
-    # screen.blit(jazz_img, (jazz_x, jazz_y), (20, 20, 30, 35))
+    # calls sprites .img and .rect for coordinates
+    all_sprites.draw(screen)
 
     for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_d:
-                move_right = True
-
-        if event.type == KEYDOWN:
-            if event.key == K_a:
-                move_left = True
-
-        if event.type == KEYUP:
-            if event.key == K_d:
-                move_right = False
-
-        if event.type == KEYUP:
-            if event.key == K_a:
-                move_left = False
-
         if event.type == pygame.QUIT:
-            game_loop = False
-            pygame.quit()
-            sys.exit()
-
-    if move_right:
-        jazz.move(10, 0)
-
-    if move_left:
-        jazz.move(-10, 0)
+            is_game_running = False
 
     clock.tick(60)  # only three images per second
     pygame.display.update()  # displays the UPDATED whole screen's new state
-    screen.fill((0, 0, 0))  # paints the whole screen to black again and then blits jazz
+    screen.fill((0, 0, 0))  # paints the whole screen to black again before next blit
 
 pygame.quit()

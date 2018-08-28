@@ -3,6 +3,10 @@
 Recreation of the first level of the legendary Jazz JackRabbit
 game developed by Epic MegaGames in 1994.
 
+## How to play
+
+Yet to come!
+
 ## How to install
 
 Yet to come!

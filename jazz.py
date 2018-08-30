@@ -33,13 +33,17 @@ is_game_running = True
 # main game loop
 while is_game_running:
 
-    # updates the screen surface to a new state
-    # calls sprites .img and .rect for coordinates
-    all_sprites.draw(screen)
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             is_game_running = False
+
+        # tries to change jazz
+        jazz.move(event)
+
+    # blits the self.img onto the surface (screen)
+    # uses self.rect for coordinates --> self.rect must be updated!
+    all_sprites.draw(screen)
+    all_sprites.update()  # updates rect.x
 
     clock.tick(60)  # only three images per second
     pygame.display.update()  # displays the UPDATED whole screen's new state

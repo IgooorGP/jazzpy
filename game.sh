@@ -2,4 +2,4 @@
 # Main shell file to run the game.
 # -------------------------------------------------
 
-python jazz.py
+python game.py

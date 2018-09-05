@@ -65,7 +65,7 @@ class Jazz(pygame.sprite.Sprite):
         # jazz imgs
         self.image = self.sprite_sheet.get_image(self.DEFAULT_POSITION_SPRITE)
         self.rect = self.image.get_rect(
-            topleft=(self.x, self.y)  # gets width/height of the img but x, y == 0, 0 always!
+            topleft=(self.x, self.y)  # gets width/height of the img but the position is at x, y
         )
 
         self._K_d_pressed = False
@@ -122,9 +122,10 @@ class Jazz(pygame.sprite.Sprite):
         if self.jazz_orientation == "left":
             self.image = pygame.transform.flip(self.image, True, False)
 
-    def move(self, event):
-        """ Handles pygame.events to update Jazz's attributes. """
-
+    def capture_event(self, event):
+        """ 
+        Handles pygame.events to update Jazz's attributes. 
+        """
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LALT and self.is_on_floor:  # jumps only when at the floor
                 self.is_jumping = True

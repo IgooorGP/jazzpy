@@ -17,6 +17,10 @@ class SpriteSheet:
         Args:
             file_name(str): relative os.path based on jazz.py file.
         """
+        # playing jazz = https://classicreload.com/jazz-jackrabbit.html
+        # removing background spritesheet = https://www141.lunapic.com/editor/
+        # get spritesheet positions = http://getspritexy.com/
+
         # background to transparent
         self.sprite_sheet = pygame.image.load(file_name).convert_alpha()
 

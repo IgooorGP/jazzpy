@@ -53,6 +53,7 @@ while is_game_running:
 
     # updates jazz based on the events on the event loop
     jazz.update()
+
     # blits jazz's surface based on the updated camera
     screen.blit(jazz.image, camera.apply(jazz))
 

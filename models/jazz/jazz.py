@@ -123,7 +123,7 @@ class Jazz(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
 
     def capture_event(self, event):
-        """ 
+        """
         Handles pygame.events to update Jazz's attributes. 
         """
         if event.type == pygame.KEYDOWN:

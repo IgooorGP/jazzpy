@@ -16,11 +16,12 @@ class Camera:
         Default constructor for a camera object.
 
         Args:
-            camera_fn (function): camera function.
-            width (int): total width of the level
-            height (int): total height of the level
+            screen_width (int): game's screen width.
+            screen_height (int): game's screen height.
+            level_width (int): total width of the level.
+            level_height (int): total height of the level.
         """
-        # holds the camera state
+        # holds the initial camera position
         self.camera_x = 0
         self.camera_y = 0
         self.screen_width = screen_width
@@ -40,9 +41,11 @@ class Camera:
         """
         Updates the camera position by following an entity (player).
         """
+        # centers the camera based on the target that it is following
         self.camera_x = int(self.screen_width / 2) - target.rect.x
         self.camera_y = int(self.screen_height / 2) - target.rect.y
 
+        # avoid showing black parts beyond the level
         self.camera_x = min(0, self.camera_x)  # stop scrolling at the left edge
         self.camera_x = max(-(self.level_width - self.screen_width), self.camera_x)  # stop scrolling at the right edge
         self.camera_y = max(-(self.level_height - self.screen_height), self.camera_y)  # stop scrolling at the bottom

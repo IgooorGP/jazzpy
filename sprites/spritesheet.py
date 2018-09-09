@@ -31,10 +31,11 @@ class SpriteSheet:
         Returns:
             (pygame.Surface): Blited surface (image).
         """
-        x = at[0]
-        y = at[1]
-        width = at[2]
-        height = at[3]
+        x, y, width, height = at
+        # x = at[0]
+        # y = at[1]
+        # width = at[2]
+        # height = at[3]
 
         # uses a transparent surface as the base image (pass pygame.SRCALPHA).
         image = pygame.Surface([width, height], pygame.SRCALPHA)

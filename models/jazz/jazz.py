@@ -47,7 +47,7 @@ class Jazz(pygame.sprite.Sprite):
     INITIAL_JUMP_Y_SPEED = 10  # y coord is negative!
     GRAVITY_SPEED = 0.5
 
-    def __init__(self):
+    def __init__(self, level_x, level_y):
         """
         Default constructor for the Jazz JackRabbit character class.
         """
@@ -58,7 +58,7 @@ class Jazz(pygame.sprite.Sprite):
         self.sprite_sheet = SpriteSheet("./sprites/jazz/jazz.png")
 
         # jazz default position
-        self.x, self.y = 300, 300
+        self.x, self.y = level_x, level_y
         self.speed_x, self.speed_y = 0, 0
         self.accerelation_x, self.acceleration_y = 0, 0
 

@@ -5,6 +5,7 @@ import pygame
 
 from config import SCREEN_HEIGHT, SCREEN_WIDTH
 from scenes.play_scene import PlayScene
+from levels.diamondus.diamondus_level_one import DiamondusLevelOne
 
 
 def main():
@@ -18,7 +19,9 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     is_game_running = True
-    play_scene = PlayScene()
+
+    # creates a play_scene at the level one
+    play_scene = PlayScene(DiamondusLevelOne)
 
     # main game loop
     while is_game_running:

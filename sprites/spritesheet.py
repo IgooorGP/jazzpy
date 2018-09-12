@@ -49,13 +49,13 @@ class SpriteSheet:
             image_width, image_height = sprite_width, sprite_height
 
         # creates an empty surface
-        image = pygame.Surface([sprite_width, sprite_height], pygame.SRCALPHA)
+        image = pygame.Surface((sprite_width, sprite_height), pygame.SRCALPHA)
 
         # blits the sprite_sheet surface at the position dest=(0, 0) of the empty surface
         # area specifies the cropped (smaller portion) of the sprite_sheet
         image.blit(self.sprite_sheet, dest=(0, 0), area=(spritesheet_x, spritesheet_y, sprite_width, sprite_height))
 
-        # if the desired image width is bigger than the sprite width, resize
+        # if the desired image width is bigger than the sprite width, resize to the desired img size
         if image_width > sprite_width and image_height > sprite_height:
             return pygame.transform.scale(image, (image_width, image_height))
 

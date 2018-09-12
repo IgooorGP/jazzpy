@@ -21,7 +21,14 @@ def main():
     is_game_running = True
 
     # creates a play_scene at the level one
-    play_scene = PlayScene(DiamondusLevelOne)
+    diamondus_level_one = DiamondusLevelOne(
+        "./sprites/levels/diamondus/diamondus.png",
+        "./levels/diamondus/diamondus_one.txt",
+        platforms_width=40,
+        platforms_height=40,
+    )
+
+    play_scene = PlayScene(diamondus_level_one)
 
     # main game loop
     while is_game_running:

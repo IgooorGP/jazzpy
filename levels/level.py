@@ -18,10 +18,12 @@ class Level(ABC):
         """
         self.sprite_sheet = SpriteSheet(spritesheet_file)
         self.level_file = level_file
-        self.total_level_width = 0
-        self.total_level_height = 0
         self.platforms_width = platforms_width
         self.platforms_height = platforms_height
+
+        # filled after parse_level invocation
+        self.total_level_width = 0
+        self.total_level_height = 0
         self.platforms = []
 
         # fills platforms of the levels

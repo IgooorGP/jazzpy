@@ -2,4 +2,4 @@
 # Main shell file to run the game.
 # -------------------------------------------------
 
-python game.py
+python main.py

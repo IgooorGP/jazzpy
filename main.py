@@ -23,7 +23,7 @@ def main():
     # creates a play_scene at the level one
     diamondus_level_one = DiamondusLevelOne(
         "./sprites/levels/diamondus/diamondus.png",
-        "./levels/diamondus/diamondus_one.txt",
+        "./levels/diamondus/diamondus_level_one.txt",
         platforms_width=40,
         platforms_height=40,
     )

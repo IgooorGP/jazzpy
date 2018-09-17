@@ -20,16 +20,15 @@ class Level(ABC):
         self.level_file = level_file
         self.platforms_width = platforms_width
         self.platforms_height = platforms_height
+        self.jazz_initial_x = -1
+        self.jazz_initial_y = -1
 
         # filled after parse_level invocation
         self.total_level_width = 0
         self.total_level_height = 0
         self.platforms = []
 
-        # fills platforms of the levels
-        self.parse_level()
-
-    def parse_level(self):
+    def build(self):
         """
         Parses level files to convert level_char_codes into
         platform objects (pygame.Sprites).
@@ -39,8 +38,15 @@ class Level(ABC):
             level_y = 0
 
             for line in fileobj:
+                # removes whitespaces except spaces
+                line = line.strip("\r\n\t")
+
                 for level_char_code in line:
-                    self.platforms.append(self.level_char_code_to_platform(level_char_code, level_x, level_y))
+
+                    image = self.level_char_code_to_platform(level_char_code, level_x, level_y)
+
+                    if image is not None:
+                        self.platforms.append(image)
 
                     level_x += self.platforms_width
 
@@ -53,6 +59,9 @@ class Level(ABC):
 
             # gets total level height
             self.total_level_height = level_y
+
+        if self.jazz_initial_x == -1 or self.jazz_initial_y == -1:
+            raise RuntimeError("Unable to find jazz's initial position on the level. Check the map file.")
 
     @abstractmethod
     def level_char_code_to_platform(self, level_char_code, level_x, level_y):

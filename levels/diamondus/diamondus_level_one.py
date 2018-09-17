@@ -1,5 +1,5 @@
 """
-Module with the concrete implementation of the 
+Module with the concrete implementation of the
 first level of the Diamondus world.
 """
 
@@ -26,11 +26,21 @@ class DiamondusLevelOne(Level):
         Non-abstract implementation of the method that converts level_char_codes
         into Platform objects at the right positions of the level.
         """
+        image = None
+
         if level_char_code == "F":
             image = self.sprite_sheet.get_image(self.FILL_SPRITE_1, (self.platforms_width, self.platforms_height))
-        if level_char_code == "T":
+        elif level_char_code == "T":
             image = self.sprite_sheet.get_image(self.TOP_SPRITE_1, (self.platforms_width, self.platforms_height))
-        if level_char_code == " ":
-            image = pygame.Surface().fill(color=pygame.Color(0, 0, 255, 1))
+        elif level_char_code == " ":
+            # image = pygame.Surface((self.platforms_width, self.platforms_height)).fill(color=pygame.Color(0, 0, 255, 1))
+            pass
+        elif level_char_code == "J":
+            # jazz's initial position
+            self.jazz_initial_x = level_x
+            self.jazz_initial_y = level_y
+        else:
+            image = self.sprite_sheet.get_image(self.FILL_SPRITE_1, (self.platforms_width, self.platforms_height))
 
-        return Platform(level_x, level_y, image)
+        if image:
+            return Platform(level_x, level_y, image)

@@ -17,6 +17,7 @@ def main():
 
     # gets game variables
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Jazz Jackrabbit Remake of Epic MegaGames (1994)")
     clock = pygame.time.Clock()
     is_game_running = True
 

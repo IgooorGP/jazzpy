@@ -55,14 +55,15 @@ class PlayScene(Scene):
 
         # gets bool state of specific keys that matters
         pressed_keys = [
-            pressed_states[key] for key in (pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LALT)
+            pressed_states[key]
+            for key in (pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LALT, pygame.K_SPACE)
         ]
 
         # unpacks states
-        up, down, left, right, alt = pressed_keys
+        up, down, left, right, alt, space = pressed_keys
 
         # updates jazz
-        self.jazz.update_2(up, down, left, right, alt, self.level.platforms)
+        self.jazz.update(up, down, left, right, alt, space, self.level.platforms)
         self.camera.update(self.jazz)
 
     def render_on(self, screen):

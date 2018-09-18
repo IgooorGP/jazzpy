@@ -68,15 +68,15 @@ class Jazz(pygame.sprite.Sprite):
             topleft=(self.x, self.y)  # gets width/height of the img but the position is at x, y
         )
 
-        self._K_d_pressed = False
-        self._K_a_pressed = False
+        # sprite control
         self.is_jumping = False
         self.is_falling = False
         self.is_on_floor = False
+        self.is_shooting = False
         self.jazz_orientation = "right"
         self.current_running_sprite = 0
 
-    def get_running_sprite(self):
+    def _get_running_sprite(self):
         """
         Alters Jazz's running sprite on every frame to give a 
         movement sensation.
@@ -89,7 +89,7 @@ class Jazz(pygame.sprite.Sprite):
 
         return tpl_sprite
 
-    def change_sprite(self):
+    def _change_sprite(self):
         """
         Performs sprite changes based on Jazz's movements. 
         """
@@ -107,7 +107,7 @@ class Jazz(pygame.sprite.Sprite):
 
         if abs(self.speed_x) >= 2:
             # self.image = self.sprite_sheet.get_image(self.RUNNING_SRITE_1)
-            self.image = self.sprite_sheet.get_image(self.get_running_sprite())
+            self.image = self.sprite_sheet.get_image(self._get_running_sprite())
 
         if self.speed_x == 0:
             self.image = self.sprite_sheet.get_image(self.DEFAULT_POSITION_SPRITE)
@@ -122,86 +122,13 @@ class Jazz(pygame.sprite.Sprite):
         if self.jazz_orientation == "left":
             self.image = pygame.transform.flip(self.image, True, False)
 
-    def capture_event(self, event):
-        """
-        Handles pygame.events to update Jazz's attributes. 
-        """
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LALT and self.is_on_floor:  # jumps only when at the floor
-                self.is_jumping = True
-                self.is_on_floor = False
-                self.is_falling = False
-                self.speed_y = -self.INITIAL_JUMP_Y_SPEED  # negative for moving up!
+        if self.is_shooting:
+            self.image = self.sprite_sheet.get_image(self.SHOOTING_SPRITE_1)
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                self._K_d_pressed = True
-                self.jazz_orientation = "right"
+    def update(self, up, down, left, right, alt, space, platforms):
+        """ Updates jazz's (x, y) positions. """
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                self._K_a_pressed = True
-                self.jazz_orientation = "left"
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                self._K_d_pressed = False
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
-                self._K_a_pressed = False
-
-    def update(self):
-        """
-        Updates the current position. Checks for collisions. Listen to events.
-        """
-        # x movement
-        if self._K_d_pressed:
-            self.speed_x += self.ACCELERATION_X
-
-            if self.speed_x > self.MAX_SPEED_X:
-                self.speed_x = self.MAX_SPEED_X
-
-        elif self._K_a_pressed:
-            self.speed_x -= self.ACCELERATION_X
-
-            if abs(self.speed_x) > self.MAX_SPEED_X:
-                self.speed_x = -self.MAX_SPEED_X
-
-        else:
-            if self.speed_x > 0:
-                self.speed_x -= self.ACCELERATION_X
-                self.speed_x = 0 if self.speed_x < 0 else self.speed_x
-
-            if self.speed_x < 0:
-                self.speed_x += self.ACCELERATION_X
-                self.speed_x = 0 if self.speed_x > 0 else self.speed_x
-
-        self.rect.x += self.speed_x
-
-        # y movement
-        if self.is_jumping:
-            self.rect.y += self.speed_y  # negative == going up!
-            self.speed_y += self.GRAVITY_SPEED  # reduces speed
-
-            print(self.speed_y)
-            print(self.rect.y)
-
-            if self.speed_y > 0:
-                self.is_falling = True
-
-        if self.rect.y >= 300:  # floor
-            self.is_falling = False
-            self.is_jumping = False
-            self.is_on_floor = True
-            self.speed_y = 0
-            self.rect.y = 300
-
-        # perform sprite changes
-        self.change_sprite()
-
-    def update_2(self, up, down, left, right, alt, platforms):
-        """ Updates jazz. """
+        # updates x position
         if right:
             self.jazz_orientation = "right"
             self.speed_x += self.ACCELERATION_X
@@ -216,21 +143,7 @@ class Jazz(pygame.sprite.Sprite):
             if abs(self.speed_x) > self.MAX_SPEED_X:
                 self.speed_x = -self.MAX_SPEED_X
 
-        elif down:
-            pass
-
-        elif up:
-            pass
-
-        elif alt:
-
-            if self.is_on_floor:
-                self.is_jumping = True
-                self.is_on_floor = False
-                self.is_falling = False
-                self.speed_y = -self.INITIAL_JUMP_Y_SPEED  # negative for moving up!
-
-        else:
+        elif not (left or right):
             if self.speed_x > 0:
                 self.speed_x -= self.ACCELERATION_X
                 self.speed_x = 0 if self.speed_x < 0 else self.speed_x
@@ -239,47 +152,56 @@ class Jazz(pygame.sprite.Sprite):
                 self.speed_x += self.ACCELERATION_X
                 self.speed_x = 0 if self.speed_x > 0 else self.speed_x
 
+        if alt and self.is_on_floor:
+            self.is_jumping = True
+            self.speed_y = -self.INITIAL_JUMP_Y_SPEED  # negative for moving up!
+
+        if space:
+            self.is_shooting = True
+
         self.rect.right += self.speed_x
 
-        # y movement
+        # checks for x collision
+        self.collide(self.speed_x, 0, platforms)
+
+        # updates y position
         if not self.is_on_floor:
-            self.rect.top += self.speed_y  # negative == going up!
-            self.speed_y += self.GRAVITY_SPEED  # reduces speed
+            self.speed_y += self.GRAVITY_SPEED  # reduces speed (adds +)
 
-            if self.speed_y > 0:
-                self.is_jumping = False
-                self.is_falling = True
+        self.rect.bottom += self.speed_y  # negative == going up!
+        self.is_on_floor = False
+        self.is_falling = True
+        self.is_shooting = False
 
-            # print(self.speed_y)
-            # print(self.rect.y)
+        # checks for x collision
+        self.collide(0, self.speed_y, platforms)
 
-        self.collide(platforms)
+        if self.speed_y > 0:
+            self.is_jumping = False
 
         # perform sprite changes
-        self.change_sprite()
+        self._change_sprite()
 
-    def collide(self, platforms):
+    def collide(self, speed_x, speed_y, platforms):
         """ Detects x-y collisions. """
         for platform in platforms:
 
             if pygame.sprite.collide_rect(self, platform):
-                if self.speed_x > 0:
+
+                if speed_x > 0:
                     self.rect.right = platform.rect.left
 
-                if self.speed_x < 0:
+                if speed_x < 0:
                     self.rect.left = platform.rect.right
 
-                if self.speed_y > 0:
+                if speed_y > 0:
                     self.rect.bottom = platform.rect.top
-                    self.is_jumping = False
-                    self.is_on_floor = True
-                    self.is_falling = False
-                    self.speed_y = 0
 
-                if self.speed_y < 0:
+                    self.is_on_floor = True
+                    self.is_jumping = False
+                    self.is_falling = False
+                    # self.speed_y = 0
+
+                if speed_y < 0:
                     self.rect.top = platform.rect.bottom
                     self.is_falling = True
-
-                    
-            # elif self.speed_y == 0:
-            #     self.is_on_floor = False

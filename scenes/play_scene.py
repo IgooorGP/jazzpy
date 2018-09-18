@@ -62,7 +62,7 @@ class PlayScene(Scene):
         up, down, left, right, alt = pressed_keys
 
         # updates jazz
-        # self.jazz.update(up, down, left, right, self.level.platforms)
+        self.jazz.update_2(up, down, left, right, alt, self.level.platforms)
         self.camera.update(self.jazz)
 
     def render_on(self, screen):

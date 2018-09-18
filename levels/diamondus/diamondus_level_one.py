@@ -34,7 +34,7 @@ class DiamondusLevelOne(Level):
             image = self.sprite_sheet.get_image(self.TOP_SPRITE_1, (self.platforms_width, self.platforms_height))
         elif level_char_code == " ":
             # image = pygame.Surface((self.platforms_width, self.platforms_height)).fill(color=pygame.Color(0, 0, 255, 1))
-            pass
+            return None
         elif level_char_code == "J":
             # jazz's initial position
             self.jazz_initial_x = level_x

@@ -32,6 +32,9 @@ def main():
 
     # main game loop
     while is_game_running:
+        # clears screen
+        screen.fill((0, 0, 0))
+
         clock.tick(60)  # max of 60 fps
 
         if pygame.event.get(pygame.QUIT):

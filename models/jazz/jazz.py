@@ -72,7 +72,7 @@ class Jazz(pygame.sprite.Sprite):
         self._K_a_pressed = False
         self.is_jumping = False
         self.is_falling = False
-        self.is_on_floor = True
+        self.is_on_floor = False
         self.jazz_orientation = "right"
         self.current_running_sprite = 0
 
@@ -90,7 +90,7 @@ class Jazz(pygame.sprite.Sprite):
         return tpl_sprite
 
     def change_sprite(self):
-        """ 
+        """
         Performs sprite changes based on Jazz's movements. 
         """
         if abs(self.speed_x) > 0 and abs(self.speed_x) < 0.4:
@@ -199,3 +199,87 @@ class Jazz(pygame.sprite.Sprite):
 
         # perform sprite changes
         self.change_sprite()
+
+    def update_2(self, up, down, left, right, alt, platforms):
+        """ Updates jazz. """
+        if right:
+            self.jazz_orientation = "right"
+            self.speed_x += self.ACCELERATION_X
+
+            if self.speed_x > self.MAX_SPEED_X:
+                self.speed_x = self.MAX_SPEED_X
+
+        elif left:
+            self.jazz_orientation = "left"
+            self.speed_x -= self.ACCELERATION_X
+
+            if abs(self.speed_x) > self.MAX_SPEED_X:
+                self.speed_x = -self.MAX_SPEED_X
+
+        elif down:
+            pass
+
+        elif up:
+            pass
+
+        elif alt:
+
+            if self.is_on_floor:
+                self.is_jumping = True
+                self.is_on_floor = False
+                self.is_falling = False
+                self.speed_y = -self.INITIAL_JUMP_Y_SPEED  # negative for moving up!
+
+        else:
+            if self.speed_x > 0:
+                self.speed_x -= self.ACCELERATION_X
+                self.speed_x = 0 if self.speed_x < 0 else self.speed_x
+
+            if self.speed_x < 0:
+                self.speed_x += self.ACCELERATION_X
+                self.speed_x = 0 if self.speed_x > 0 else self.speed_x
+
+        self.rect.right += self.speed_x
+
+        # y movement
+        if not self.is_on_floor:
+            self.rect.top += self.speed_y  # negative == going up!
+            self.speed_y += self.GRAVITY_SPEED  # reduces speed
+
+            if self.speed_y > 0:
+                self.is_jumping = False
+                self.is_falling = True
+
+            # print(self.speed_y)
+            # print(self.rect.y)
+
+        self.collide(platforms)
+
+        # perform sprite changes
+        self.change_sprite()
+
+    def collide(self, platforms):
+        """ Detects x-y collisions. """
+        for platform in platforms:
+
+            if pygame.sprite.collide_rect(self, platform):
+                if self.speed_x > 0:
+                    self.rect.right = platform.rect.left
+
+                if self.speed_x < 0:
+                    self.rect.left = platform.rect.right
+
+                if self.speed_y > 0:
+                    self.rect.bottom = platform.rect.top
+                    self.is_jumping = False
+                    self.is_on_floor = True
+                    self.is_falling = False
+                    self.speed_y = 0
+
+                if self.speed_y < 0:
+                    self.rect.top = platform.rect.bottom
+                    self.is_falling = True
+
+                    
+            # elif self.speed_y == 0:
+            #     self.is_on_floor = False

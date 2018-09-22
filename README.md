@@ -3,6 +3,10 @@
 Recreation of the first level of the legendary Jazz JackRabbit
 game developed by Epic MegaGames in 1994.
 
+## Gameplay
+
+![alt-text](/docs/jazz_play.gif)
+
 ## How to install
 
 Yet to come!

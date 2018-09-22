@@ -11,13 +11,14 @@ class Level(ABC):
     levels from txt files.
     """
 
-    def __init__(self, spritesheet_file, level_file, platforms_width, platforms_height):
+    def __init__(self, spritesheet_file, level_file, level_music_file, platforms_width, platforms_height):
         """
         Base constructor of a level with empty platforms
         and a spritsheet based on a path to the file.
         """
         self.sprite_sheet = SpriteSheet(spritesheet_file)
         self.level_file = level_file
+        self.level_music_file = level_music_file
         self.platforms_width = platforms_width
         self.platforms_height = platforms_height
         self.jazz_initial_x = -1

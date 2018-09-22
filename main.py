@@ -14,6 +14,7 @@ def main():
     """
     # initializes all pygame modules
     pygame.init()
+    pygame.mixer.init()  # iniits mixer module for sound
 
     # gets game variables
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -25,6 +26,7 @@ def main():
     diamondus_level_one = DiamondusLevelOne(
         "./sprites/levels/diamondus/diamondus.png",
         "./levels/diamondus/diamondus_level_one.txt",
+        "./music/levels/diamondus/marbelara.mp3",
         platforms_width=40,
         platforms_height=40,
     )

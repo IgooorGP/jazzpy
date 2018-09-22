@@ -28,7 +28,7 @@ class Jazz(pygame.sprite.Sprite):
 
     RUNNING_SPRITES = (RUNNING_SRITE_1, RUNNING_SRITE_2, RUNNING_SRITE_3, RUNNING_SRITE_4)
 
-    RUNNING_STOP_SPRITE_1 = (160, 95, 37, 37)
+    BUMP_SPRITE = (160, 95, 37, 37)
 
     SHOOTING_SPRITE_1 = (157, 130, 37, 37)
 
@@ -42,10 +42,11 @@ class Jazz(pygame.sprite.Sprite):
     HURT_SPRITE_2 = (194, 244, 37, 37)
     HURT_SPRITE_3 = (230, 244, 37, 37)
 
-    MAX_SPEED_X = 4
-    ACCELERATION_X = 0.1
+    MAX_SPEED_X = 8
+    ACCELERATION_X = 0.2
     INITIAL_JUMP_Y_SPEED = 10  # y coord is negative!
     GRAVITY_SPEED = 0.5
+    INITIAL_SHOOTING_DELAY = 200
 
     def __init__(self, level_x, level_y):
         """
@@ -73,7 +74,7 @@ class Jazz(pygame.sprite.Sprite):
         self.is_falling = False
         self.is_on_floor = False
         self.is_shooting = False
-        self.jazz_orientation = "right"
+        self.direction = "right"
         self.current_running_sprite = 0
 
     def _get_running_sprite(self):
@@ -91,7 +92,7 @@ class Jazz(pygame.sprite.Sprite):
 
     def _change_sprite(self):
         """
-        Performs sprite changes based on Jazz's movements. 
+        Performs sprite changes based on Jazz's movements.
         """
         if abs(self.speed_x) > 0 and abs(self.speed_x) < 0.4:
             self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_1)
@@ -115,29 +116,31 @@ class Jazz(pygame.sprite.Sprite):
         if self.is_jumping:
             self.image = self.sprite_sheet.get_image(self.JUMPING_SPRITE_1)
 
-        if self.is_falling:
+        if self.is_falling and not self.is_jumping:
             self.image = self.sprite_sheet.get_image(self.FALLING_SPRITE_1)
 
-        # always, in the end, change flip the sprite
-        if self.jazz_orientation == "left":
-            self.image = pygame.transform.flip(self.image, True, False)
-
-        if self.is_shooting:
+        if self.is_shooting and not self.is_falling and not self.is_jumping and not self.is_running:
             self.image = self.sprite_sheet.get_image(self.SHOOTING_SPRITE_1)
+
+        # always, in the end, change flip the sprite
+        if self.direction == "left":
+            self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self, up, down, left, right, alt, space, platforms):
         """ Updates jazz's (x, y) positions. """
 
         # updates x position
         if right:
-            self.jazz_orientation = "right"
+            self.is_running = True
+            self.direction = "right"
             self.speed_x += self.ACCELERATION_X
 
             if self.speed_x > self.MAX_SPEED_X:
                 self.speed_x = self.MAX_SPEED_X
 
         elif left:
-            self.jazz_orientation = "left"
+            self.is_running = True
+            self.direction = "left"
             self.speed_x -= self.ACCELERATION_X
 
             if abs(self.speed_x) > self.MAX_SPEED_X:
@@ -145,12 +148,15 @@ class Jazz(pygame.sprite.Sprite):
 
         elif not (left or right):
             if self.speed_x > 0:
-                self.speed_x -= self.ACCELERATION_X
+                self.speed_x -= 2 * self.ACCELERATION_X
                 self.speed_x = 0 if self.speed_x < 0 else self.speed_x
 
             if self.speed_x < 0:
-                self.speed_x += self.ACCELERATION_X
+                self.speed_x += 2 * self.ACCELERATION_X
                 self.speed_x = 0 if self.speed_x > 0 else self.speed_x
+
+            if self.speed_x == 0:
+                self.is_running = False
 
         if alt and self.is_on_floor:
             self.is_jumping = True
@@ -158,6 +164,9 @@ class Jazz(pygame.sprite.Sprite):
 
         if space:
             self.is_shooting = True
+
+        if not space:
+            self.is_shooting = False
 
         self.rect.right += self.speed_x
 
@@ -171,7 +180,6 @@ class Jazz(pygame.sprite.Sprite):
         self.rect.bottom += self.speed_y  # negative == going up!
         self.is_on_floor = False
         self.is_falling = True
-        self.is_shooting = False
 
         # checks for x collision
         self.collide(0, self.speed_y, platforms)
@@ -190,9 +198,13 @@ class Jazz(pygame.sprite.Sprite):
 
                 if speed_x > 0:
                     self.rect.right = platform.rect.left
+                    self.is_running = False
+                    self.speed_x = 0
 
                 if speed_x < 0:
                     self.rect.left = platform.rect.right
+                    self.is_running = False
+                    self.speed_x = 0
 
                 if speed_y > 0:
                     self.rect.bottom = platform.rect.top

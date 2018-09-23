@@ -27,8 +27,8 @@ def main():
         "./sprites/levels/diamondus/diamondus.png",
         "./levels/diamondus/diamondus_level_one.txt",
         "./music/levels/diamondus/marbelara.mp3",
-        platforms_width=40,
-        platforms_height=40,
+        platforms_width=60,
+        platforms_height=60,
     )
 
     play_scene = PlayScene(diamondus_level_one)

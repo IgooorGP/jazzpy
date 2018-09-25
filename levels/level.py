@@ -34,15 +34,23 @@ class Level(ABC):
         Parses level files to convert level_char_codes into
         platform objects (pygame.Sprites).
         """
+        line_number = 0
+
         with open(self.level_file) as fileobj:
             level_x = 0
             level_y = 0
 
             for line in fileobj:
                 # removes whitespaces except spaces
+                line_number += 1
                 line = line.strip("\r\n\t")
 
-                for level_char_code in line:
+                for i in range(0, len(line), 2):
+
+                    level_char_code = line[i : i + 2]  # reads two letters
+
+                    if len(level_char_code) != 2:
+                        raise RuntimeError("Corrupted file level code at line: %s. Check the map file." % (line_number))
 
                     image = self.level_char_code_to_platform(level_char_code, level_x, level_y)
 

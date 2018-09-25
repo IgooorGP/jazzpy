@@ -45,7 +45,7 @@ class Jazz(pygame.sprite.Sprite):
 
     MAX_SPEED_X = 8
     ACCELERATION_X = 0.2
-    INITIAL_JUMP_Y_SPEED = 11  # y coord is negative!
+    INITIAL_JUMP_Y_SPEED = 12  # y coord is negative!
     GRAVITY_SPEED = 0.5
     INITIAL_SHOOTING_DELAY = 200
 

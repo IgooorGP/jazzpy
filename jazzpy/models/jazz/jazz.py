@@ -3,8 +3,8 @@ Module with the class representation
 of Jazz the Jack Rabbit.
 """
 import pygame
-from sprites.spritesheet import SpriteSheet
-
+from jazzpy.sprites.spritesheet import SpriteSheet
+from jazzpy.config import GAME_ROOT
 
 class Jazz(pygame.sprite.Sprite):
     """
@@ -27,7 +27,12 @@ class Jazz(pygame.sprite.Sprite):
     RUNNING_SRITE_3 = (87, 95, 37, 32)
     RUNNING_SRITE_4 = (125, 95, 37, 32)
 
-    RUNNING_SPRITES = (RUNNING_SRITE_1, RUNNING_SRITE_2, RUNNING_SRITE_3, RUNNING_SRITE_4)
+    RUNNING_SPRITES = (
+        RUNNING_SRITE_1,
+        RUNNING_SRITE_2,
+        RUNNING_SRITE_3,
+        RUNNING_SRITE_4,
+    )
 
     BUMP_SPRITE = (160, 95, 37, 37)
 
@@ -57,7 +62,8 @@ class Jazz(pygame.sprite.Sprite):
         super().__init__()
 
         # loads the sprite_sheet
-        self.sprite_sheet = SpriteSheet("./sprites/jazz/jazz.png")
+        import os, sys
+        self.sprite_sheet = SpriteSheet(GAME_ROOT + "/sprites/jazz/jazz.png")
 
         # jazz default position
         self.x, self.y = level_x, level_y
@@ -65,9 +71,14 @@ class Jazz(pygame.sprite.Sprite):
         self.accerelation_x, self.acceleration_y = 0, 0
 
         # jazz imgs
-        self.image = self.sprite_sheet.get_image(self.DEFAULT_POSITION_SPRITE, dimensions=self.JAZZ_DIMENSIONS)
+        self.image = self.sprite_sheet.get_image(
+            self.DEFAULT_POSITION_SPRITE, dimensions=self.JAZZ_DIMENSIONS
+        )
         self.rect = self.image.get_rect(
-            topleft=(self.x, self.y)  # gets width/height of the img but the position is at x, y
+            topleft=(
+                self.x,
+                self.y,
+            )  # gets width/height of the img but the position is at x, y
         )
 
         # sprite control
@@ -87,7 +98,11 @@ class Jazz(pygame.sprite.Sprite):
         tpl_sprite = self.RUNNING_SPRITES[self.current_running_sprite]
 
         self.current_running_sprite += 1
-        self.current_running_sprite = 0 if self.current_running_sprite > 3 else self.current_running_sprite
+        self.current_running_sprite = (
+            0
+            if self.current_running_sprite > 3
+            else self.current_running_sprite
+        )
 
         return tpl_sprite
 
@@ -96,32 +111,55 @@ class Jazz(pygame.sprite.Sprite):
         Performs sprite changes based on Jazz's movements.
         """
         if abs(self.speed_x) > 0 and abs(self.speed_x) < 0.4:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.WALKING_SPRITE_1, dimensions=dimensions
+            )
 
         if abs(self.speed_x) >= 0.4 and abs(self.speed_x) < 0.8:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_2, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.WALKING_SPRITE_2, dimensions=dimensions
+            )
 
         if abs(self.speed_x) >= 0.8 and abs(self.speed_x) < 1.2:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_3, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.WALKING_SPRITE_3, dimensions=dimensions
+            )
 
         if abs(self.speed_x) >= 1.2 and abs(self.speed_x) < 1.5:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_4, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.WALKING_SPRITE_4, dimensions=dimensions
+            )
 
         if abs(self.speed_x) >= 2:
             # self.image = self.sprite_sheet.get_image(self.RUNNING_SRITE_1)
-            self.image = self.sprite_sheet.get_image(self._get_running_sprite(), dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self._get_running_sprite(), dimensions=dimensions
+            )
 
         if self.speed_x == 0:
-            self.image = self.sprite_sheet.get_image(self.DEFAULT_POSITION_SPRITE, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.DEFAULT_POSITION_SPRITE, dimensions=dimensions
+            )
 
         if self.is_jumping:
-            self.image = self.sprite_sheet.get_image(self.JUMPING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.JUMPING_SPRITE_1, dimensions=dimensions
+            )
 
         if self.is_falling and not self.is_jumping:
-            self.image = self.sprite_sheet.get_image(self.FALLING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(
+                self.FALLING_SPRITE_1, dimensions=dimensions
+            )
 
-        if self.is_shooting and not self.is_falling and not self.is_jumping and not self.is_running:
-            self.image = self.sprite_sheet.get_image(self.SHOOTING_SPRITE_1, dimensions=dimensions)
+        if (
+            self.is_shooting
+            and not self.is_falling
+            and not self.is_jumping
+            and not self.is_running
+        ):
+            self.image = self.sprite_sheet.get_image(
+                self.SHOOTING_SPRITE_1, dimensions=dimensions
+            )
 
         # always, in the end, change flip the sprite
         if self.direction == "left":

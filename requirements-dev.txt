@@ -1,5 +1,0 @@
-pygame==1.9.4
-configparser
-coverage==4.4.2
-nose==1.3.7
-nose-watch==0.9.2

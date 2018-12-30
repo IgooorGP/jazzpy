@@ -4,12 +4,12 @@ levels of the game.
 """
 import pygame
 
-from camera.camera import Camera
-from config import SCREEN_HEIGHT, SCREEN_WIDTH
-from models.jazz.jazz import Jazz
-from scenes.abstract_scene import Scene
-from models.misc.bullet import Bullet
-from models.misc.hud import Hud
+from jazzpy.camera.camera import Camera
+from jazzpy.config import SCREEN_HEIGHT, SCREEN_WIDTH
+from jazzpy.models.jazz.jazz import Jazz
+from jazzpy.scenes.abstract_scene import Scene
+from jazzpy.models.misc.bullet import Bullet
+from jazzpy.models.misc.hud import Hud
 
 
 class PlayScene(Scene):
@@ -74,27 +74,47 @@ class PlayScene(Scene):
         # gets bool state of specific keys that matters
         pressed_keys = [
             pressed_states[key]
-            for key in (pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LALT, pygame.K_SPACE)
+            for key in (
+                pygame.K_UP,
+                pygame.K_DOWN,
+                pygame.K_LEFT,
+                pygame.K_RIGHT,
+                pygame.K_LALT,
+                pygame.K_SPACE,
+            )
         ]
 
         # unpacks states
         up, down, left, right, alt, space = pressed_keys
 
         # updates jazz
-        self.jazz.update(up, down, left, right, alt, space, self.level.platforms)
+        self.jazz.update(
+            up, down, left, right, alt, space, self.level.platforms
+        )
         self.bullets.update(self.level.platforms)
 
         if space:
 
             newtime = pygame.time.get_ticks()
 
-            if self.oldtime == 0 or newtime - self.oldtime > self.jazz.INITIAL_SHOOTING_DELAY:
+            if (
+                self.oldtime == 0
+                or newtime - self.oldtime > self.jazz.INITIAL_SHOOTING_DELAY
+            ):
 
                 if newtime - self.oldtime < 1000:
                     if self.jazz.direction == "right":
-                        bullet = Bullet(self.jazz.rect.midright[0], self.jazz.rect.midright[1] + 5, self.jazz.direction)
+                        bullet = Bullet(
+                            self.jazz.rect.midright[0],
+                            self.jazz.rect.midright[1] + 5,
+                            self.jazz.direction,
+                        )
                     else:
-                        bullet = Bullet(self.jazz.rect.midleft[0], self.jazz.rect.midleft[1] + 5, self.jazz.direction)
+                        bullet = Bullet(
+                            self.jazz.rect.midleft[0],
+                            self.jazz.rect.midleft[1] + 5,
+                            self.jazz.direction,
+                        )
 
                     self.bullets.add(bullet)
 
@@ -125,4 +145,12 @@ class PlayScene(Scene):
 
         # jazz blitting
         screen.blit(self.jazz.image, self.camera.apply(self.jazz))
-        screen.blit(self.hud.image, (0, SCREEN_HEIGHT - self.hud.HUD_HEIGHT, self.hud.HUD_WIDTH, self.hud.HUD_HEIGHT))
+        screen.blit(
+            self.hud.image,
+            (
+                0,
+                SCREEN_HEIGHT - self.hud.HUD_HEIGHT,
+                self.hud.HUD_WIDTH,
+                self.hud.HUD_HEIGHT,
+            ),
+        )

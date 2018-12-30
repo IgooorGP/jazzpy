@@ -5,8 +5,8 @@ first level of the Diamondus world.
 
 import pygame
 
-from levels.level import Level
-from models.platforms.platforms import Platform
+from jazzpy.levels.level import Level
+from jazzpy.models.platforms.platforms import Platform
 
 
 class DiamondusLevelOne(Level):
@@ -48,12 +48,16 @@ class DiamondusLevelOne(Level):
         """
         platform_dimensions = (self.platforms_width, self.platforms_height)
 
-        class_vars = {k: getattr(self, k) for k in dir(self) if not k.startswith("__")}
+        class_vars = {
+            k: getattr(self, k) for k in dir(self) if not k.startswith("__")
+        }
 
         sprite_tuple = class_vars.get(level_char_code)
 
         if sprite_tuple:
-            image = self.sprite_sheet.get_image(sprite_tuple, dimensions=platform_dimensions)
+            image = self.sprite_sheet.get_image(
+                sprite_tuple, dimensions=platform_dimensions
+            )
 
             return Platform(level_x, level_y, image)
 

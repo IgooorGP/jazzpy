@@ -3,12 +3,14 @@ Main game module.
 """
 import pygame
 
-from config import SCREEN_HEIGHT, SCREEN_WIDTH
-from scenes.play_scene import PlayScene
-from levels.diamondus.diamondus_level_one import DiamondusLevelOne
+from jazzpy.config.config import GAME_ROOT
+from jazzpy.config.config import SCREEN_HEIGHT
+from jazzpy.config.config import SCREEN_WIDTH
+from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
+from jazzpy.scenes.play_scene import PlayScene
 
 
-def main():
+def play():
     """
     Main function to start the game loop.
     """
@@ -18,15 +20,17 @@ def main():
 
     # gets game variables
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Jazz Jackrabbit Remake of Epic MegaGames (1994)")
+    pygame.display.set_caption(
+        "Jazz Jackrabbit Remake of Epic MegaGames (1994)"
+    )
     clock = pygame.time.Clock()
     is_game_running = True
 
     # creates a play_scene at the level one
     diamondus_level_one = DiamondusLevelOne(
-        "./sprites/levels/diamondus/diamondus.png",
-        "./levels/diamondus/diamondus_level_one.txt",
-        "./music/levels/diamondus/marbelara.mp3",
+        GAME_ROOT + "/sprites/levels/diamondus/diamondus.png",
+        GAME_ROOT + "/levels/diamondus/diamondus_level_one.txt",
+        GAME_ROOT + "/music/levels/diamondus/marbelara.mp3",
         platforms_width=60,
         platforms_height=60,
     )
@@ -59,4 +63,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()  # starts the game loop
+    play()  # starts the game loop

@@ -2,7 +2,7 @@
 Module with the level loader class.
 """
 from abc import ABC, abstractmethod
-from sprites.spritesheet import SpriteSheet
+from jazzpy.sprites.spritesheet import SpriteSheet
 
 
 class Level(ABC):
@@ -11,7 +11,14 @@ class Level(ABC):
     levels from txt files.
     """
 
-    def __init__(self, spritesheet_file, level_file, level_music_file, platforms_width, platforms_height):
+    def __init__(
+        self,
+        spritesheet_file,
+        level_file,
+        level_music_file,
+        platforms_width,
+        platforms_height,
+    ):
         """
         Base constructor of a level with empty platforms
         and a spritsheet based on a path to the file.
@@ -50,9 +57,14 @@ class Level(ABC):
                     level_char_code = line[i : i + 2]  # reads two letters
 
                     if len(level_char_code) != 2:
-                        raise RuntimeError("Corrupted file level code at line: %s. Check the map file." % (line_number))
+                        raise RuntimeError(
+                            "Corrupted file level code at line: %s. Check the map file."
+                            % (line_number)
+                        )
 
-                    image = self.level_char_code_to_platform(level_char_code, level_x, level_y)
+                    image = self.level_char_code_to_platform(
+                        level_char_code, level_x, level_y
+                    )
 
                     if image is not None:
                         self.platforms.append(image)
@@ -70,7 +82,9 @@ class Level(ABC):
             self.total_level_height = level_y
 
         if self.jazz_initial_x == -1 or self.jazz_initial_y == -1:
-            raise RuntimeError("Unable to find jazz's initial position on the level. Check the map file.")
+            raise RuntimeError(
+                "Unable to find jazz's initial position on the level. Check the map file."
+            )
 
     @abstractmethod
     def level_char_code_to_platform(self, level_char_code, level_x, level_y):

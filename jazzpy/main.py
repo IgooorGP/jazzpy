@@ -3,64 +3,77 @@ Main game module.
 """
 import pygame
 
-from jazzpy.config.config import GAME_ROOT
-from jazzpy.config.config import SCREEN_HEIGHT
-from jazzpy.config.config import SCREEN_WIDTH
-from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
-from jazzpy.scenes.play_scene import PlayScene
+from jazzpy import GAME_SETTINGS
+from jazzpy.scenes.manager import SceneManager
 
 
-def play():
+class JazzPy:
     """
-    Main function to start the game loop.
+    Main game class.
     """
-    # initializes all pygame modules
-    pygame.init()
-    pygame.mixer.init()  # iniits mixer module for sound
 
-    # gets game variables
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption(
-        "Jazz Jackrabbit Remake of Epic MegaGames (1994)"
-    )
-    clock = pygame.time.Clock()
-    is_game_running = True
+    SCREEN_CAPTION = "JazzPy - Jazz Jackrabbit by Epic MegaGames (1994) Remake"
 
-    # creates a play_scene at the level one
-    diamondus_level_one = DiamondusLevelOne(
-        GAME_ROOT + "/sprites/levels/diamondus/diamondus.png",
-        GAME_ROOT + "/levels/diamondus/diamondus_level_one.txt",
-        GAME_ROOT + "/music/levels/diamondus/marbelara.mp3",
-        platforms_width=60,
-        platforms_height=60,
-    )
+    def __init__(self):
+        # intializes Pygame
+        pygame.init()
+        pygame.mixer.init()  # iniits mixer module for sound
 
-    play_scene = PlayScene(diamondus_level_one)
+        self.screen = self._load_screen(self.SCREEN_CAPTION)
+        self.scene_manager = SceneManager()
+        self.clock = pygame.time.Clock()
+        self.is_game_running = True
 
-    # main game loop
-    while is_game_running:
-        # clears screen
-        screen.fill((0, 0, 0))
+    def _load_screen(self, screen_caption):
+        """
+        Initializes the game screen.
+        """
+        # screen creation
+        screen = pygame.display.set_mode(
+            (
+                GAME_SETTINGS["screen_settings"]["screen_width"],
+                GAME_SETTINGS["screen_settings"]["screen_height"],
+            )
+        )
 
-        clock.tick(60)  # max of 60 fps
+        # caption setting
+        pygame.display.set_caption(screen_caption)
 
-        if pygame.event.get(pygame.QUIT):
-            is_game_running = False
+        return screen
 
-            return
+    def _wait_for_next_frame(self):
+        """
+        Uses Pygame's Clock to set a time delay before the next frame
+        gets updated.
 
-        # each scene handles the events of the queue
-        play_scene.handle_events(pygame.event.get())
+        Sleeps based on seconds per frame to proceed with next instructions
+        """
+        self.clock.tick(GAME_SETTINGS["game_settings"]["max_fps"])
 
-        # updates elements of the scene
-        play_scene.update()
+    def _update_state(self, screen, event_list):
+        """
+        Updates game state for each frame.
+        """
+        # clears screen before next update
+        self.screen.fill((0, 0, 0))
 
-        # renders on the screen the updated scene
-        play_scene.render_on(screen)
+        # updates the scene based on user event
+        self.scene_manager.update_current_scene(screen, event_list)
 
         # updates the whole display
         pygame.display.flip()
 
+    def play(self):
+        """
+        Public method that starts the main game/event loop.
+        """
+        while True:
 
-if __name__ == "__main__":
-    play()  # starts the game loop
+            if pygame.event.get(pygame.QUIT):
+                break
+
+            # clock tick before next frame (fixed fps)
+            self._wait_for_next_frame()
+
+            # updates game state and screen based on the events
+            self._update_state(self.screen, pygame.event.get())

@@ -1,0 +1,9 @@
+game_settings:
+  max_fps: 60
+
+folder_settings:
+  game_root: './jazzpy/'
+
+screen_settings:
+  screen_width: 800
+  screen_height: 640

@@ -3,8 +3,10 @@ Module with the class representation
 of Jazz the Jack Rabbit.
 """
 import pygame
+
+from jazzpy import GAME_SETTINGS
 from jazzpy.sprites.spritesheet import SpriteSheet
-from jazzpy.config import GAME_ROOT
+
 
 class Jazz(pygame.sprite.Sprite):
     """
@@ -62,8 +64,7 @@ class Jazz(pygame.sprite.Sprite):
         super().__init__()
 
         # loads the sprite_sheet
-        import os, sys
-        self.sprite_sheet = SpriteSheet(GAME_ROOT + "/sprites/jazz/jazz.png")
+        self.sprite_sheet = SpriteSheet(GAME_SETTINGS["folder_settings"]["game_root"] + "/sprites/jazz/jazz.png")
 
         # jazz default position
         self.x, self.y = level_x, level_y

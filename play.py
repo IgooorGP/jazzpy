@@ -1,4 +1,8 @@
-from jazzpy import play
+"""
+Bootstrap module to start the game for development.
+"""
+from jazzpy import JazzPy
 
 if __name__ == "__main__":
-    play()
+    game = JazzPy()
+    game.play()  # starts the game loop

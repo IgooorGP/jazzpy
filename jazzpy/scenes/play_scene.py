@@ -4,12 +4,12 @@ levels of the game.
 """
 import pygame
 
+from jazzpy import GAME_SETTINGS
 from jazzpy.camera.camera import Camera
-from jazzpy.config import SCREEN_HEIGHT, SCREEN_WIDTH
 from jazzpy.models.jazz.jazz import Jazz
-from jazzpy.scenes.abstract_scene import Scene
 from jazzpy.models.misc.bullet import Bullet
 from jazzpy.models.misc.hud import Hud
+from jazzpy.scenes.abstract_scene import Scene
 
 
 class PlayScene(Scene):
@@ -19,7 +19,7 @@ class PlayScene(Scene):
     """
 
     def __init__(self, level):
-        """ 
+        """
         Default constructor of the playscene. Builds a level, creates
         a Jazzi instance and starts the play scene camera.
 
@@ -40,8 +40,9 @@ class PlayScene(Scene):
 
         # starts the camera
         self.camera = Camera(
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT - self.hud.HUD_HEIGHT,
+            GAME_SETTINGS["screen_settings"]["screen_width"],
+            GAME_SETTINGS["screen_settings"]["screen_height"]
+            - self.hud.HUD_HEIGHT,
             self.level.total_level_width,
             self.level.total_level_height,
         )
@@ -149,7 +150,8 @@ class PlayScene(Scene):
             self.hud.image,
             (
                 0,
-                SCREEN_HEIGHT - self.hud.HUD_HEIGHT,
+                GAME_SETTINGS["screen_settings"]["screen_height"]
+                - self.hud.HUD_HEIGHT,
                 self.hud.HUD_WIDTH,
                 self.hud.HUD_HEIGHT,
             ),

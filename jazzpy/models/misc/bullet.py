@@ -5,7 +5,7 @@ of Jazz's bullets.
 import pygame
 
 from jazzpy.sprites.spritesheet import SpriteSheet
-from jazzpy.config import GAME_ROOT
+from jazzpy import GAME_SETTINGS
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -32,7 +32,10 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__()
 
         # default position
-        self.sprite_sheet = SpriteSheet(GAME_ROOT + "sprites/misc/misc.png")
+        self.sprite_sheet = SpriteSheet(
+            GAME_SETTINGS["folder_settings"]["game_root"]
+            + "sprites/misc/misc.png"
+        )
         self.direction = direction
         self.x, self.y = level_x, level_y
         self.has_hit = False

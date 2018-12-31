@@ -1,6 +1,64 @@
 """
-This module contains the Camera class to apply offsets to the 
+This module contains the Camera class to apply offsets to the
 screen entities in order to generate a scroll effect.
+
+The camera itself, is just a Rectangle whose width is the screen
+width and the height is the screen height (minus a HUD, etc.).
+
+It's main function is to compute an offset based on the player's
+updated coordinates in order to "drag" him back to the center
+of the screen and to apply the same offset to all objects that
+must be displayed on the screen.
+
+Example for the x axis offset calculation:
+
+                Coordinate System
+  x ---------> x
+  |
+  |    . (x,y)
+  |
+  v
+y
+
+Initial player state at the center of the screen @ (x1,y1):
+
+    <------------ screen size ------------>
+  + ---------------- Camera --------------- +
+  |											|
+  |					  			     		|
+  |					    (player)       		|
+h |					  p (x1,y1) 		    |
+  |	                                    	|
+  | 										|
+  |											|
+  + --------------------------------------- +
+
+    <------------ screen size ------------>
+  + ---------------- Camera --------------- +
+  |											|
+  |					  			     		|
+  |					     					|
+h |					  . (center)		    |
+  |	                                    	|
+  | 										|
+  |											|
+  + --------------------------------------- +
+
+After computing the updated player position's (x2,y2):
+
+    <------------ screen size ------------>
+  + ---------------- Camera --------------- +
+  |		        x2 				(x2,y2)		|
+  |--------------------------- p    		|
+  |					     					|
+h |					   .             	    |
+  |	-------------------  <---->            	|
+  |   screen_width/2	 offset_x			|
+  | 										|
+  |											|
+  + --------------------------------------- + 
+
+The offset_y computation is analogous.
 """
 
 
@@ -47,7 +105,7 @@ class Camera:
         """
         return target.rect.move(self.offset_x, self.offset_y)
 
-    def compute_offset(self, target) -> None:
+    def compute_offset(self, center_target):
         """
         Computes a new offset to be applied to all objects on the camera in
         order to centralize the player at the center and to make other objects
@@ -57,10 +115,16 @@ class Camera:
         [!]: This offset is used to "push" the player back to the center of the
              camera and, in the same fashion, the other game sprites on the
              screen.
+
+        Args:
+            center_target (pygame.sprite.Sprite): Player object which will
+            used to compute the camera offset in order to centralize it and
+            correct every other sprite position. It's the sprite which will
+            be used to centralize every other position.
         """
         # centers the camera based on the target that it is following
-        self.offset_x = -(target.rect.x - int(self.screen_width / 2))
-        self.offset_y = -(target.rect.y - int(self.screen_height / 2))
+        self.offset_x = -(center_target.rect.x - int(self.screen_width / 2))
+        self.offset_y = -(center_target.rect.y - int(self.screen_height / 2))
 
         # avoid showing black parts beyond the level
         self.offset_x = min(0, self.offset_x)  # stop scrolling at the left edge

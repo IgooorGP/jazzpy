@@ -1,13 +1,12 @@
 """
-This module contains the Camera class
-to apply offsets to the screen entities
-in order to generate a scroll effect.
+This module contains the Camera class to apply offsets to the 
+screen entities in order to generate a scroll effect.
 """
 
 
 class Camera:
     """
-    Class to apply offsets to screen entities.
+    Class to apply offsets to player and other screen objects and sprites.
     """
 
     def __init__(self, screen_width, screen_height, level_width, level_height):
@@ -21,8 +20,8 @@ class Camera:
             level_height (int): total height of the level.
         """
         # holds the initial camera position
-        self.camera_x = 0
-        self.camera_y = 0
+        self.offset_x = 0
+        self.offset_y = 0
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.level_width = level_width
@@ -40,13 +39,13 @@ class Camera:
 
         Args:
             target (object): Any object that has a rect attribute that must
-                             be blitted in the corrected position of the 
+                             be blitted in the corrected position of the
                              camera.
 
         Returns:
             (pygame.Rect): Moved rectangle due to the camera x, y offset.
         """
-        return target.rect.move(self.camera_x, self.camera_y)
+        return target.rect.move(self.offset_x, self.offset_y)
 
     def compute_offset(self, target) -> None:
         """
@@ -60,15 +59,15 @@ class Camera:
              screen.
         """
         # centers the camera based on the target that it is following
-        self.camera_x = -(target.rect.x - int(self.screen_width / 2))
-        self.camera_y = -(target.rect.y - int(self.screen_height / 2))
+        self.offset_x = -(target.rect.x - int(self.screen_width / 2))
+        self.offset_y = -(target.rect.y - int(self.screen_height / 2))
 
         # avoid showing black parts beyond the level
-        self.camera_x = min(0, self.camera_x)  # stop scrolling at the left edge
-        self.camera_x = max(
-            -(self.level_width - self.screen_width), self.camera_x
+        self.offset_x = min(0, self.offset_x)  # stop scrolling at the left edge
+        self.offset_x = max(
+            -(self.level_width - self.screen_width), self.offset_x
         )  # stop scrolling at the right edge
-        self.camera_y = max(
-            -(self.level_height - self.screen_height), self.camera_y
+        self.offset_y = max(
+            -(self.level_height - self.screen_height), self.offset_y
         )  # stop scrolling at the bottom
-        self.camera_y = min(0, self.camera_y)  # stop scrolling at the top
+        self.offset_y = min(0, self.offset_y)  # stop scrolling at the top

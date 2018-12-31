@@ -69,11 +69,12 @@ class JazzPy:
         """
         while True:
 
+            # attempts to get the quit event from the event queue
             if pygame.event.get(pygame.QUIT):
                 break
 
             # clock tick before next frame (fixed fps)
             self._wait_for_next_frame()
 
-            # updates game state and screen based on the events
+            # updates game state/screen by getting all events from the queue
             self._update_state(self.screen, pygame.event.get())

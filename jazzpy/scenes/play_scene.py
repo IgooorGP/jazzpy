@@ -122,7 +122,7 @@ class PlayScene(Scene):
                 self.oldtime = pygame.time.get_ticks()
 
         # updates the camera state
-        self.camera.update(self.jazz)
+        self.camera.compute_offset(self.jazz)
 
     def render_on(self, screen):
         """
@@ -133,19 +133,19 @@ class PlayScene(Scene):
         """
         # platforms blitting
         for platform in self.level.platforms:
-            screen.blit(platform.image, self.camera.apply(platform))
+            screen.blit(platform.image, self.camera.apply_offset(platform))
 
         for bullet in self.bullets.sprites():
-            screen.blit(bullet.image, self.camera.apply(bullet))
+            screen.blit(bullet.image, self.camera.apply_offset(bullet))
 
             if bullet.has_hit:
-                screen.blit(bullet.image, self.camera.apply(bullet))
+                screen.blit(bullet.image, self.camera.apply_offset(bullet))
                 bullet.kill()
 
         # bullets are removed due to collision in the group
 
         # jazz blitting
-        screen.blit(self.jazz.image, self.camera.apply(self.jazz))
+        screen.blit(self.jazz.image, self.camera.apply_offset(self.jazz))
         screen.blit(
             self.hud.image,
             (

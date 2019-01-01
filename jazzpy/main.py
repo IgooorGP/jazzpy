@@ -50,7 +50,7 @@ class JazzPy:
         """
         self.clock.tick(GAME_SETTINGS["game_settings"]["max_fps"])
 
-    def _update_state(self, screen, event_list):
+    def _update_state(self, screen):
         """
         Updates game state for each frame.
         """
@@ -58,7 +58,7 @@ class JazzPy:
         self.screen.fill((0, 0, 0))
 
         # updates the scene based on user event
-        self.scene_manager.update_current_scene(screen, event_list)
+        self.scene_manager.update_current_scene(screen)
 
         # updates the whole display
         pygame.display.flip()
@@ -77,4 +77,4 @@ class JazzPy:
             self._wait_for_next_frame()
 
             # updates game state/screen by getting all events from the queue
-            self._update_state(self.screen, pygame.event.get())
+            self._update_state(self.screen)

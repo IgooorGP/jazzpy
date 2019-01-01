@@ -5,6 +5,7 @@ of Jazz the Jack Rabbit.
 import pygame
 
 from jazzpy import GAME_SETTINGS
+from jazzpy.models.misc.bullet import Bullet
 from jazzpy.sprites.spritesheet import SpriteSheet
 
 
@@ -14,7 +15,7 @@ class Jazz(pygame.sprite.Sprite):
     """
 
     # http://getspritexy.com/
-    JAZZ_DIMENSIONS = (50, 50)
+    JAZZ_DIMENSIONS = (60, 60)
     DEFAULT_POSITION_SPRITE = (16, 22, 37, 32)
 
     WALKING_SPRITE_1 = (16, 60, 37, 32)
@@ -29,12 +30,7 @@ class Jazz(pygame.sprite.Sprite):
     RUNNING_SRITE_3 = (87, 95, 37, 32)
     RUNNING_SRITE_4 = (125, 95, 37, 32)
 
-    RUNNING_SPRITES = (
-        RUNNING_SRITE_1,
-        RUNNING_SRITE_2,
-        RUNNING_SRITE_3,
-        RUNNING_SRITE_4,
-    )
+    RUNNING_SPRITES = (RUNNING_SRITE_1, RUNNING_SRITE_2, RUNNING_SRITE_3, RUNNING_SRITE_4)
 
     BUMP_SPRITE = (160, 95, 37, 37)
 
@@ -64,25 +60,29 @@ class Jazz(pygame.sprite.Sprite):
         super().__init__()
 
         # loads the sprite_sheet
-        self.sprite_sheet = SpriteSheet(GAME_SETTINGS["folder_settings"]["game_root"] + "/sprites/jazz/jazz.png")
+        self.sprite_sheet = SpriteSheet(
+            GAME_SETTINGS["folder_settings"]["game_root"] + "/sprites/jazz/jazz.png"
+        )
 
         # jazz default position
-        self.x, self.y = level_x, level_y
         self.speed_x, self.speed_y = 0, 0
         self.accerelation_x, self.acceleration_y = 0, 0
 
-        # jazz imgs
+        # jazz surface creation from the spritesheet with given width/height
         self.image = self.sprite_sheet.get_image(
             self.DEFAULT_POSITION_SPRITE, dimensions=self.JAZZ_DIMENSIONS
         )
+
+        # jazz rectangle creation for collision detection
         self.rect = self.image.get_rect(
-            topleft=(
-                self.x,
-                self.y,
-            )  # gets width/height of the img but the position is at x, y
+            topleft=(level_x, level_y)  # gets width/height of the img but the position is at x, y
         )
 
+        # jazz HAS the bullets now
+        self.bullets = pygame.sprite.Group()
+
         # sprite control
+        self.is_running = False
         self.is_jumping = False
         self.is_falling = False
         self.is_on_floor = False
@@ -90,9 +90,12 @@ class Jazz(pygame.sprite.Sprite):
         self.direction = "right"
         self.current_running_sprite = 0
 
+        # shooting delay
+        self.oldtime = 0
+
     def _get_running_sprite(self):
         """
-        Alters Jazz's running sprite on every frame to give a 
+        Alters Jazz's running sprite on every frame to give a
         movement sensation.
         """
 
@@ -100,9 +103,7 @@ class Jazz(pygame.sprite.Sprite):
 
         self.current_running_sprite += 1
         self.current_running_sprite = (
-            0
-            if self.current_running_sprite > 3
-            else self.current_running_sprite
+            0 if self.current_running_sprite > 3 else self.current_running_sprite
         )
 
         return tpl_sprite
@@ -112,24 +113,16 @@ class Jazz(pygame.sprite.Sprite):
         Performs sprite changes based on Jazz's movements.
         """
         if abs(self.speed_x) > 0 and abs(self.speed_x) < 0.4:
-            self.image = self.sprite_sheet.get_image(
-                self.WALKING_SPRITE_1, dimensions=dimensions
-            )
+            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_1, dimensions=dimensions)
 
         if abs(self.speed_x) >= 0.4 and abs(self.speed_x) < 0.8:
-            self.image = self.sprite_sheet.get_image(
-                self.WALKING_SPRITE_2, dimensions=dimensions
-            )
+            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_2, dimensions=dimensions)
 
         if abs(self.speed_x) >= 0.8 and abs(self.speed_x) < 1.2:
-            self.image = self.sprite_sheet.get_image(
-                self.WALKING_SPRITE_3, dimensions=dimensions
-            )
+            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_3, dimensions=dimensions)
 
         if abs(self.speed_x) >= 1.2 and abs(self.speed_x) < 1.5:
-            self.image = self.sprite_sheet.get_image(
-                self.WALKING_SPRITE_4, dimensions=dimensions
-            )
+            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_4, dimensions=dimensions)
 
         if abs(self.speed_x) >= 2:
             # self.image = self.sprite_sheet.get_image(self.RUNNING_SRITE_1)
@@ -143,32 +136,90 @@ class Jazz(pygame.sprite.Sprite):
             )
 
         if self.is_jumping:
-            self.image = self.sprite_sheet.get_image(
-                self.JUMPING_SPRITE_1, dimensions=dimensions
-            )
+            self.image = self.sprite_sheet.get_image(self.JUMPING_SPRITE_1, dimensions=dimensions)
 
-        if self.is_falling and not self.is_jumping:
-            self.image = self.sprite_sheet.get_image(
-                self.FALLING_SPRITE_1, dimensions=dimensions
-            )
+        if self.is_falling:
+            self.image = self.sprite_sheet.get_image(self.FALLING_SPRITE_1, dimensions=dimensions)
 
-        if (
-            self.is_shooting
-            and not self.is_falling
-            and not self.is_jumping
-            and not self.is_running
-        ):
-            self.image = self.sprite_sheet.get_image(
-                self.SHOOTING_SPRITE_1, dimensions=dimensions
-            )
+        if self.is_shooting and not self.is_falling and not self.is_jumping and not self.is_running:
+            self.image = self.sprite_sheet.get_image(self.SHOOTING_SPRITE_1, dimensions=dimensions)
 
         # always, in the end, change flip the sprite
         if self.direction == "left":
             self.image = pygame.transform.flip(self.image, True, False)
 
-    def update(self, up, down, left, right, alt, space, platforms):
-        """ Updates jazz's (x, y) positions. """
+    def _platform_collision_callback(self, speed_x, speed_y, platform_sprite):
+        """
+        Changes Jazz state after a platform collision detection.
 
+        rect.right == rect.topright (x)
+        rect.left == rect.topleft (x)
+
+        rect.bottom == rect.bottomleft (y)
+        rect.top == rect.topleft (y)
+        """
+        # bottom platform collision
+        if speed_x > 0:
+            # self.rect.right = platform_sprite.rect.left
+            self.rect.right = platform_sprite.rect.left
+            self.is_running = False
+            self.speed_x = 0
+
+        if speed_x < 0:
+            self.rect.left = platform_sprite.rect.right
+            self.is_running = False
+            self.speed_x = 0
+
+        if speed_y > 0:
+
+            self.rect.bottom = platform_sprite.rect.top
+
+            self.is_on_floor = True
+            self.is_jumping = False
+            self.is_falling = False
+            self.speed_y = 0
+
+        if speed_y < 0:
+            self.rect.top = platform_sprite.rect.bottom
+            self.is_falling = True
+
+    def _enemy_collision_callback(self, enemy_sprite):
+        """ Changes Jazz state after an enemy collision detection. """
+        pass
+
+    def _detect_collision(self, sprite_collision_candidates, candidate_type, is_x_axis):
+        """
+        Detects collision with other groups of sprites such as platforms,
+        enemies, etc. and for executes a collision callback to change
+        the state after the collision.
+
+        Args:
+            sprite_collision_candidates (list of pygame.sprite.Sprite):
+            sprites list to test collision.
+
+            candidate_type (str): type of the candidate to execute a callback
+            after the collision. Can be ("platform", "enemy").
+        """
+        # checks if jazz collides with any member
+        collision_sprites = pygame.sprite.spritecollide(
+            self, sprite_collision_candidates, dokill=False, collided=pygame.sprite.collide_rect
+        )
+
+        for collision_sprite in collision_sprites:
+
+            # same y collision sprite is used for x collision too
+            if candidate_type == "platform":
+
+                if is_x_axis:
+                    self._platform_collision_callback(self.speed_x, 0, collision_sprite)
+                else:
+                    self._platform_collision_callback(0, self.speed_y, collision_sprite)
+
+        # after all collision callbacks, change the sprite
+        self._change_sprite()
+
+    def _move_x_axis(self, left, right):
+        """ Handles x-axis movement. """
         # updates x position
         if right:
             self.is_running = True
@@ -198,62 +249,66 @@ class Jazz(pygame.sprite.Sprite):
             if self.speed_x == 0:
                 self.is_running = False
 
+        self.rect.right += self.speed_x
+
+    def _move_y_axis(self, alt):
+        """
+        Handles y-axis movement.
+        Forces jazz to always be falling with a certain speed y which gets
+        corrected by collision detection if he's on a platform.
+        """
         if alt and self.is_on_floor:
             self.is_jumping = True
             self.speed_y = -self.INITIAL_JUMP_Y_SPEED  # negative for moving up!
-
-        if space:
-            self.is_shooting = True
-
-        if not space:
-            self.is_shooting = False
-
-        self.rect.right += self.speed_x
-
-        # checks for x collision
-        self.collide(self.speed_x, 0, platforms)
 
         # updates y position
         if not self.is_on_floor:
             self.speed_y += self.GRAVITY_SPEED  # reduces speed (adds +)
 
-        self.rect.bottom += self.speed_y  # negative == going up!
         self.is_on_floor = False
-        self.is_falling = True
 
-        # checks for x collision
-        self.collide(0, self.speed_y, platforms)
+        if self.speed_y > 1:
+            self.is_falling = True
 
-        if self.speed_y > 0:
-            self.is_jumping = False
+        self.rect.bottom += self.speed_y
 
-        # perform sprite changes
-        self._change_sprite()
+    def _change_shooting_state(self, space):
+        """ Shoots """
+        self.is_shooting = bool(space)
 
-    def collide(self, speed_x, speed_y, platforms):
-        """ Detects x-y collisions. """
-        for platform in platforms:
+        if self.is_shooting:
 
-            if pygame.sprite.collide_rect(self, platform):
+            newtime = pygame.time.get_ticks()
 
-                if speed_x > 0:
-                    self.rect.right = platform.rect.left
-                    self.is_running = False
-                    self.speed_x = 0
+            if self.oldtime == 0 or newtime - self.oldtime > self.INITIAL_SHOOTING_DELAY:
 
-                if speed_x < 0:
-                    self.rect.left = platform.rect.right
-                    self.is_running = False
-                    self.speed_x = 0
+                if newtime - self.oldtime < 1000:
+                    if self.direction == "right":
+                        bullet = Bullet(
+                            self.rect.midright[0],
+                            self.rect.midright[1] + 5,
+                            self.direction,
+                        )
 
-                if speed_y > 0:
-                    self.rect.bottom = platform.rect.top
+                    else:
+                        bullet = Bullet(
+                            self.rect.midleft[0],
+                            self.rect.midleft[1] + 5,
+                            self.direction,
+                        )
 
-                    self.is_on_floor = True
-                    self.is_jumping = False
-                    self.is_falling = False
-                    # self.speed_y = 0
+                    self.bullets.add(bullet)
 
-                if speed_y < 0:
-                    self.rect.top = platform.rect.bottom
-                    self.is_falling = True
+                self.oldtime = pygame.time.get_ticks()
+
+    def update(self, pressed_keys, platforms):
+        """ Updates jazz's (x, y) positions. """
+        left, right, alt, space = pressed_keys
+
+        self._move_x_axis(left, right)
+        self._detect_collision(platforms, "platform", is_x_axis=True)
+
+        self._move_y_axis(alt)
+        self._detect_collision(platforms, "platform", is_x_axis=False)
+
+        self._change_shooting_state(space)

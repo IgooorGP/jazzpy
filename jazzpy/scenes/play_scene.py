@@ -7,7 +7,6 @@ import pygame
 from jazzpy import GAME_SETTINGS
 from jazzpy.camera.camera import Camera
 from jazzpy.models.jazz.jazz import Jazz
-from jazzpy.models.misc.bullet import Bullet
 from jazzpy.models.misc.hud import Hud
 from jazzpy.scenes.abstract_scene import Scene
 
@@ -41,43 +40,35 @@ class PlayScene(Scene):
         # starts the camera
         self.camera = Camera(
             GAME_SETTINGS["screen_settings"]["screen_width"],
-            GAME_SETTINGS["screen_settings"]["screen_height"]
-            - self.hud.HUD_HEIGHT,
+            GAME_SETTINGS["screen_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
             self.level.total_level_width,
             self.level.total_level_height,
         )
 
-        # bullets
-        self.bullets = pygame.sprite.Group()
-        self.oldtime = 0
+        # # bullets
+        # self.bullets = pygame.sprite.Group()
 
         # music
         pygame.mixer.music.load(self.level.level_music_file)
         pygame.mixer.music.play(-1)  # loops forever the music of the level
 
-    def handle_events(self, events):
+    def _get_player_events(self):
         """
-        Method that handles player's events.
+        Method that gets pygame's events from the queue.
 
         Args:
             events (list of pygame.event.Event): list of events
-        """
-        pass
 
-    def update(self):
+        Returns:
+            (list): list of pressed keys by the player.
         """
-        Method that calls update on every entity/sprite on the scene in order
-        to update its contents positions and states.
-        """
-        # gets a bool state list of events
         pressed_states = pygame.key.get_pressed()
 
-        # gets bool state of specific keys that matters
         pressed_keys = [
             pressed_states[key]
             for key in (
-                pygame.K_UP,
-                pygame.K_DOWN,
+                # pygame.K_UP,
+                # pygame.K_DOWN,
                 pygame.K_LEFT,
                 pygame.K_RIGHT,
                 pygame.K_LALT,
@@ -85,44 +76,17 @@ class PlayScene(Scene):
             )
         ]
 
-        # unpacks states
-        up, down, left, right, alt, space = pressed_keys
+        return pressed_keys
 
-        # updates jazz
-        self.jazz.update(
-            up, down, left, right, alt, space, self.level.platforms
-        )
-        self.bullets.update(self.level.platforms)
+    def update(self):
+        """
+        Method that calls update on every entity/sprite on the scene in order
+        to update its contents positions and states.
+        """
+        pressed_keys = self._get_player_events()
 
-        if space:
-
-            newtime = pygame.time.get_ticks()
-
-            if (
-                self.oldtime == 0
-                or newtime - self.oldtime > self.jazz.INITIAL_SHOOTING_DELAY
-            ):
-
-                if newtime - self.oldtime < 1000:
-                    if self.jazz.direction == "right":
-                        bullet = Bullet(
-                            self.jazz.rect.midright[0],
-                            self.jazz.rect.midright[1] + 5,
-                            self.jazz.direction,
-                        )
-                    else:
-                        bullet = Bullet(
-                            self.jazz.rect.midleft[0],
-                            self.jazz.rect.midleft[1] + 5,
-                            self.jazz.direction,
-                        )
-
-                    self.bullets.add(bullet)
-
-                self.oldtime = pygame.time.get_ticks()
-
-        # updates the camera state
-        self.camera.compute_offset(self.jazz)
+        self.jazz.update(pressed_keys, self.level.platforms)
+        self.jazz.bullets.update(self.level.platforms)
 
     def render_on(self, screen):
         """
@@ -131,11 +95,14 @@ class PlayScene(Scene):
         Args:
             screen (pygame.Surface): the main game screen to draw surfaces onto.
         """
+        # updates the camera offset based on jazz
+        self.camera.compute_offset(self.jazz)
+
         # platforms blitting
         for platform in self.level.platforms:
             screen.blit(platform.image, self.camera.apply_offset(platform))
 
-        for bullet in self.bullets.sprites():
+        for bullet in self.jazz.bullets.sprites():
             screen.blit(bullet.image, self.camera.apply_offset(bullet))
 
             if bullet.has_hit:
@@ -150,8 +117,7 @@ class PlayScene(Scene):
             self.hud.image,
             (
                 0,
-                GAME_SETTINGS["screen_settings"]["screen_height"]
-                - self.hud.HUD_HEIGHT,
+                GAME_SETTINGS["screen_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
                 self.hud.HUD_WIDTH,
                 self.hud.HUD_HEIGHT,
             ),

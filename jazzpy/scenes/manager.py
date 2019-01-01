@@ -23,21 +23,17 @@ class SceneManager:
             + "/sprites/levels/diamondus/diamondus.png",
             GAME_SETTINGS["folder_settings"]["game_root"]
             + "/levels/diamondus/diamondus_level_one.txt",
-            GAME_SETTINGS["folder_settings"]["game_root"]
-            + "/music/levels/diamondus/marbelara.mp3",
+            GAME_SETTINGS["folder_settings"]["game_root"] + "/music/levels/diamondus/marbelara.mp3",
             platforms_width=60,
             platforms_height=60,
         )
 
         self.current_scene = PlayScene(diamondus_level_one)
 
-    def update_current_scene(self, screen, event_list):
+    def update_current_scene(self, screen):
         """
         Updates the current scene based on a list of Pygame events.
         """
-        # each scene handles the events of the queue
-        self.current_scene.handle_events(event_list)
-
         # updates elements of the scene
         self.current_scene.update()
 

@@ -5,7 +5,7 @@ This software project is a recreation of the first level (Diamondus) of the Jazz
 ## Disclaimer
 
 All the sprite sheets, fictional names, images and soundtracks used in this software project were downloaded from the internet
-and are, by no means, mine. All the images, character names, stage names, other fictional names and the soundtracks belongs 
+and are, by no means, mine. All the images, character names, stage names, other fictional names and the soundtracks belong
 to Epic MegaGames (Epic Games).
 
 ## Gameplay Example
@@ -16,8 +16,10 @@ to Epic MegaGames (Epic Games).
 
 * Python 3.7;
 * Pygame 1.9.4;
-* Pyinstaller for binary file building;
-* Tox and pytest for testing.
+* Pyinstaller 3.4 for generating the game binary file;
+* Tox 3.6.1 as testing automating tool;
+* Pytest 4.0.2 as the testing framework;
+* Coverage 4.5.2 for testing coverage reports.
 
 ## Code Linting
 
@@ -30,7 +32,7 @@ To format the code in a standard way, Black formatter was used. Black is a pytho
 
 https://github.com/ambv/black
 
-## Generating a binary file of the game
+## Generating a binary files
 
 Python is an interpreted language and as such all Python source code requires a Python interpreter to be executed. However, in order to generate binary distributions of this software, Pyinstaller (https://pythonhosted.org/PyInstaller/operating-mode.html) was used to analyze all the modules
 and packages required by the ```jazz.py``` script (bootstrap python module that runs the game) and copies all these dependencies **plus** the active Python interpreter into a single folder or single executable file.
@@ -92,10 +94,10 @@ Now, install the dev requirements with pip:
 pip install -r requirements_dev.txt
 ```
 
-Finally, run bootstrap script which instantiates the game:
+Finally, run the bootstrap script which uses the jazzpy package to get the main class and instantiate the game:
 
 ```bash
-python 
+python jazz.py
 ```
 
 ## How to test

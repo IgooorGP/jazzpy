@@ -32,7 +32,7 @@ To format the code in a standard way, Black formatter was used. Black is a pytho
 
 https://github.com/ambv/black
 
-## Generating a binary files
+## Generating the game binary files
 
 Python is an interpreted language and as such all Python source code requires a Python interpreter to be executed. However, in order to generate binary distributions of this software, Pyinstaller (https://pythonhosted.org/PyInstaller/operating-mode.html) was used to analyze all the modules
 and packages required by the ```jazz.py``` script (bootstrap python module that runs the game) and copies all these dependencies **plus** the active Python interpreter into a single folder or single executable file.
@@ -55,7 +55,7 @@ To run the game using a bash terminal:
 ./dist/jazz  # runs the jazz binary file on the dist folder
 ```
 
-### Binary file and OS version
+### Binary files and the OS version
 
 The binary output of Pyinstaller is, naturally, specific to the OS of the user who's creating the binary and the active version of Python. Hence, to build for another OS, one needs to run Pyinstaller in that specific OS. A little note from the Pyinstaller team is as follows:
 

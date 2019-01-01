@@ -2,11 +2,8 @@
 Module with the concrete implementation of the
 first level of the Diamondus world.
 """
-
-import pygame
-
-from levels.level import Level
-from models.platforms.platforms import Platform
+from jazzpy.levels.level import Level
+from jazzpy.sprites.platforms.platforms import Platform
 
 
 class DiamondusLevelOne(Level):

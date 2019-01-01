@@ -33,9 +33,9 @@ class Scene(ABC):
         """
         pass
 
-    @abstractmethod
-    def handle_events(self, events):
-        """
-        Abstract method to handle events from the event loop.
-        """
-        pass
+    # @abstractmethod
+    # def handle_events(self, events):
+    #     """
+    #     Abstract method to handle events from the event loop.
+    #     """
+    #     pass

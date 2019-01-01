@@ -78,3 +78,8 @@ class JazzPy:
 
             # updates game state/screen by getting all events from the queue
             self._update_state(self.screen)
+
+
+if __name__ == "__main__":
+    game = JazzPy()
+    game.play()  # starts the game loop

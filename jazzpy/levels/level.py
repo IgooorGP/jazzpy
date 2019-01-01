@@ -2,7 +2,8 @@
 Module with the level loader class.
 """
 from abc import ABC, abstractmethod
-from jazzpy.sprites.spritesheet import SpriteSheet
+
+from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
 class Level(ABC):
@@ -12,12 +13,7 @@ class Level(ABC):
     """
 
     def __init__(
-        self,
-        spritesheet_file,
-        level_file,
-        level_music_file,
-        platforms_width,
-        platforms_height,
+        self, spritesheet_file, level_file, level_music_file, platforms_width, platforms_height
     ):
         """
         Base constructor of a level with empty platforms
@@ -62,9 +58,7 @@ class Level(ABC):
                             % (line_number)
                         )
 
-                    image = self.level_char_code_to_platform(
-                        level_char_code, level_x, level_y
-                    )
+                    image = self.level_char_code_to_platform(level_char_code, level_x, level_y)
 
                     if image is not None:
                         self.platforms.append(image)

@@ -4,8 +4,8 @@ of Jazz's bullets.
 """
 import pygame
 
-from jazzpy.sprites.spritesheet import SpriteSheet
 from jazzpy import GAME_SETTINGS
+from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -33,8 +33,7 @@ class Bullet(pygame.sprite.Sprite):
 
         # default position
         self.sprite_sheet = SpriteSheet(
-            GAME_SETTINGS["folder_settings"]["game_root"]
-            + "sprites/misc/misc.png"
+            GAME_SETTINGS["folder_settings"]["game_root"] + "spritesheets/misc/misc.png"
         )
         self.direction = direction
         self.x, self.y = level_x, level_y
@@ -83,6 +82,4 @@ class Bullet(pygame.sprite.Sprite):
         Changes Jazz's bullets explosion sprites.
         """
         self.image = self.sprite_sheet.get_image(self.EXPLOSION_SPRITES[0])
-        self.rect = self.rect.move(
-            -10, -10
-        )  # offset to centralize the shoot image
+        self.rect = self.rect.move(-10, -10)  # offset to centralize the shoot image

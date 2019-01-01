@@ -20,10 +20,10 @@ class SceneManager:
         # sets a default scene the first game stage
         diamondus_level_one = DiamondusLevelOne(
             GAME_SETTINGS["folder_settings"]["game_root"]
-            + "/sprites/levels/diamondus/diamondus.png",
+            + "spritesheets/levels/diamondus/diamondus.png",
             GAME_SETTINGS["folder_settings"]["game_root"]
-            + "/levels/diamondus/diamondus_level_one.txt",
-            GAME_SETTINGS["folder_settings"]["game_root"] + "/music/levels/diamondus/marbelara.mp3",
+            + "levels/diamondus/diamondus_level_one.txt",
+            GAME_SETTINGS["folder_settings"]["game_root"] + "music/levels/diamondus/marbelara.mp3",
             platforms_width=60,
             platforms_height=60,
         )

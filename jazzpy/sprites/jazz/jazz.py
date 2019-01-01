@@ -5,8 +5,8 @@ of Jazz the Jack Rabbit.
 import pygame
 
 from jazzpy import GAME_SETTINGS
-from jazzpy.models.misc.bullet import Bullet
-from jazzpy.sprites.spritesheet import SpriteSheet
+from jazzpy.sprites.misc.bullet import Bullet
+from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
 class Jazz(pygame.sprite.Sprite):
@@ -46,10 +46,10 @@ class Jazz(pygame.sprite.Sprite):
     HURT_SPRITE_2 = (194, 244, 37, 37)
     HURT_SPRITE_3 = (230, 244, 37, 37)
 
-    MAX_SPEED_X = 8
-    ACCELERATION_X = 0.2
-    INITIAL_JUMP_Y_SPEED = 12  # y coord is negative!
-    GRAVITY_SPEED = 0.5
+    MAX_SPEED_X = 15
+    ACCELERATION_X = 0.5
+    INITIAL_JUMP_Y_SPEED = 20  # y coord is negative!
+    GRAVITY_SPEED = 1.0
     INITIAL_SHOOTING_DELAY = 200
 
     def __init__(self, level_x, level_y):
@@ -61,7 +61,7 @@ class Jazz(pygame.sprite.Sprite):
 
         # loads the sprite_sheet
         self.sprite_sheet = SpriteSheet(
-            GAME_SETTINGS["folder_settings"]["game_root"] + "/sprites/jazz/jazz.png"
+            GAME_SETTINGS["folder_settings"]["game_root"] + "spritesheets/jazz/jazz.png"
         )
 
         # jazz default position

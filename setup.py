@@ -15,7 +15,7 @@ setup(
         "jazzpy",
         "jazzpy.camera",
         "jazzpy.levels",
-        "jazzpy.models",
+        "jazzpy.sprites",
         "jazzpy.music",
         "jazzpy.scenes",
         "jazzpy.sprites",

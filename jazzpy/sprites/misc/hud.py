@@ -5,7 +5,7 @@ of Jazz's bullets.
 import pygame
 
 from jazzpy import GAME_SETTINGS
-from jazzpy.sprites.spritesheet import SpriteSheet
+from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
 class Hud(pygame.sprite.Sprite):
@@ -25,11 +25,11 @@ class Hud(pygame.sprite.Sprite):
 
         # default position
         self.sprite_sheet = SpriteSheet(
-            GAME_SETTINGS["folder_settings"]["game_root"]
-            + "/sprites/misc/misc.png"
+            GAME_SETTINGS["folder_settings"]["game_root"] + "spritesheets/misc/misc.png"
         )
         self.image = self.sprite_sheet.get_image(
-            self.HUD_SPRITE, dimensions=(GAME_SETTINGS["screen_settings"]["screen_height"], self.HUD_HEIGHT)
+            self.HUD_SPRITE,
+            dimensions=(GAME_SETTINGS["screen_settings"]["screen_width"], self.HUD_HEIGHT),
         )
 
     def update(self):

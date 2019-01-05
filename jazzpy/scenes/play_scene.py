@@ -4,9 +4,9 @@ levels of the game.
 """
 import pygame
 
-from jazzpy import GAME_SETTINGS
 from jazzpy.camera.camera import Camera
 from jazzpy.scenes.abstract_scene import Scene
+from jazzpy.settings import game_options
 from jazzpy.sprites.jazz.jazz import Jazz
 from jazzpy.sprites.misc.hud import Hud
 
@@ -44,8 +44,8 @@ class PlayScene(Scene):
 
         # starts the camera
         self.camera = Camera(
-            GAME_SETTINGS["screen_settings"]["screen_width"],
-            GAME_SETTINGS["screen_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
+            game_options["video_settings"]["screen_width"],
+            game_options["video_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
             self.level.total_level_width,
             self.level.total_level_height,
         )
@@ -156,7 +156,7 @@ class PlayScene(Scene):
             self.hud.image,
             (
                 0,
-                GAME_SETTINGS["screen_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
+                game_options["video_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
                 self.hud.HUD_WIDTH,
                 self.hud.HUD_HEIGHT,
             ),

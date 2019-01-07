@@ -14,7 +14,7 @@ class Hud(pygame.sprite.Sprite):
     """
 
     HUD_WIDTH = 100
-    HUD_HEIGHT = 100
+    HUD_HEIGHT = 80
     HUD_SPRITE = (26, 1051, 319, 32)
 
     def __init__(self):

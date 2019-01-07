@@ -85,9 +85,9 @@ class JazzPy:
             if event.type == pygame.QUIT:
                 self._before_gameover_hook()
 
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self._before_gameover_hook()
+            # must come from the play scene
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self._before_gameover_hook()
 
     def _wait_for_next_frame(self):
         """
@@ -100,7 +100,7 @@ class JazzPy:
 
         # print("FPS: {fps}".format(fps=self.clock.get_fps()))
 
-    def _update_state(self, screen):
+    def _update_state(self):
         """
         Updates game state for each frame.
         """
@@ -108,7 +108,7 @@ class JazzPy:
         self.screen.fill((0, 0, 0))
 
         # updates the scene based on user event
-        self.scene_manager.update_current_scene(screen)
+        self.scene_manager.update_current_scene()
 
         # updates the whole display
         pygame.display.flip()
@@ -123,7 +123,7 @@ class JazzPy:
             self._wait_for_next_frame()
 
             # updates game state/screen by getting all events from the queue
-            self._update_state(self.screen)
+            self._update_state()
 
             # attempts to get the quit event from the event queue
             self._check_for_gameover()

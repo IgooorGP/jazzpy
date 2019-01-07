@@ -27,7 +27,7 @@ class Scene(ABC):
         pass
 
     @abstractmethod
-    def render_on(self, screen):
+    def render(self):
         """
         Abstract method to render the scene on a screen (pygame.Surface).
         """

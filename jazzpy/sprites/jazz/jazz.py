@@ -285,16 +285,12 @@ class Jazz(pygame.sprite.Sprite):
                 if newtime - self.oldtime < 1000:
                     if self.direction == "right":
                         bullet = Bullet(
-                            self.rect.midright[0],
-                            self.rect.midright[1] + 5,
-                            self.direction,
+                            self.rect.midright[0], self.rect.midright[1] + 5, self.direction
                         )
 
                     else:
                         bullet = Bullet(
-                            self.rect.midleft[0],
-                            self.rect.midleft[1] + 5,
-                            self.direction,
+                            self.rect.midleft[0], self.rect.midleft[1] + 5, self.direction
                         )
 
                     self.bullets.add(bullet)

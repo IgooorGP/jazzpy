@@ -50,6 +50,8 @@ class PlayScene(Scene):
             self.level.total_level_height,
         )
 
+        self.is_menu_on = False
+
         # music
         pygame.mixer.music.load(self.level.level_music_file)
         pygame.mixer.music.play(-1)  # loops forever the music of the level
@@ -116,18 +118,24 @@ class PlayScene(Scene):
         to update its contents positions and states.
         """
         pressed_keys = self._get_player_events()
-        screen_platforms = self._filter_sprites_out_of_screen(self.level.platforms)
 
-        self.jazz.update(pressed_keys, screen_platforms)
-        self.jazz.bullets.update(screen_platforms)
+        if self.is_menu_on:
+            pass
+        else:
+            screen_platforms = self._filter_sprites_out_of_screen(self.level.platforms)
 
-    def render_on(self, screen):
+            self.jazz.update(pressed_keys, screen_platforms)
+            self.jazz.bullets.update(screen_platforms)
+
+    def render(self):
         """
         Method that blits things on the main screen (surface) of the game.
 
         Args:
             screen (pygame.Surface): the main game screen to draw surfaces onto.
         """
+        screen = pygame.display.get_surface()
+
         # updates the camera offset based on jazz
         self.camera.compute_offset(self.jazz)
 
@@ -138,6 +146,7 @@ class PlayScene(Scene):
             self.jazz.bullets.sprites(), self.BLITTING_X_EXTENSION, self.BLITTING_Y_EXTENSION
         )
 
+        # attempt grey filter on platforms
         for platform in screen_platforms:
             screen.blit(platform.image, self.camera.apply_offset(platform))
 
@@ -151,13 +160,7 @@ class PlayScene(Scene):
         # jazz blitting
         screen.blit(self.jazz.image, self.camera.apply_offset(self.jazz))
 
-        # HUD blitting
         screen.blit(
             self.hud.image,
-            (
-                0,
-                game_options["video_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
-                self.hud.HUD_WIDTH,
-                self.hud.HUD_HEIGHT,
-            ),
+            dest=(0, game_options["video_settings"]["screen_height"] - self.hud.HUD_HEIGHT),
         )

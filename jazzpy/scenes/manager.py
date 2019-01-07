@@ -30,7 +30,7 @@ class SceneManager:
 
         self.current_scene = PlayScene(diamondus_level_one)
 
-    def update_current_scene(self, screen):
+    def update_current_scene(self):
         """
         Updates the current scene based on a list of Pygame events.
         """
@@ -38,7 +38,7 @@ class SceneManager:
         self.current_scene.update()
 
         # renders on the screen the updated scene
-        self.current_scene.render_on(screen)
+        self.current_scene.render()
 
     def get_next_scene(self):
         """

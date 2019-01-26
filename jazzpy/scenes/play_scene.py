@@ -2,6 +2,8 @@
 Module with the scene used to represent
 levels of the game.
 """
+from typing import List
+
 import pygame
 
 from jazzpy.camera.camera import Camera
@@ -56,18 +58,16 @@ class PlayScene(Scene):
         pygame.mixer.music.load(self.level.level_music_file)
         pygame.mixer.music.play(-1)  # loops forever the music of the level
 
-    def _get_player_events(self):
+    def _get_pressed_keys(self):
         """
-        Method that gets pygame's events from the queue.
-
-        Args:
-            events (list of pygame.event.Event): list of events
+        Method that gets the pressed key events.
 
         Returns:
             (list): list of pressed keys by the player.
         """
         pressed_states = pygame.key.get_pressed()
 
+        # desired pressed key states for this scene
         pressed_keys = [
             pressed_states[key]
             for key in (
@@ -104,8 +104,8 @@ class PlayScene(Scene):
 
         for sprite in sprites_list:
 
-            within_x = sprite.rect.x >= closest_x and sprite.rect.x <= farthest_x
-            within_y = sprite.rect.y >= closest_y and sprite.rect.y <= farthest_y
+            within_x = closest_x <= sprite.rect.x <= farthest_x
+            within_y = closest_y <= sprite.rect.y <= farthest_y
 
             if within_x and within_y:
                 screen_sprites.append(sprite)
@@ -117,15 +117,20 @@ class PlayScene(Scene):
         Method that calls update on every entity/sprite on the scene in order
         to update its contents positions and states.
         """
-        pressed_keys = self._get_player_events()
+        # TODO: handle ESC to show menu and not QUIT the game
+        events: List[pygame.event.EventType] = self._get_all_events()
 
-        if self.is_menu_on:
-            pass
-        else:
-            screen_platforms = self._filter_sprites_out_of_screen(self.level.platforms)
+        for event in events:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 
-            self.jazz.update(pressed_keys, screen_platforms)
-            self.jazz.bullets.update(screen_platforms)
+                self.has_captured_quit_event = True
+                return
+
+        pressed_keys = self._get_pressed_keys()
+        screen_platforms = self._filter_sprites_out_of_screen(self.level.platforms)
+
+        self.jazz.update(pressed_keys, screen_platforms)
+        self.jazz.bullets.update(screen_platforms)
 
     def render(self):
         """

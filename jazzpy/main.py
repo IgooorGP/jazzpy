@@ -76,18 +76,16 @@ class JazzPy:
 
         pygame.quit()
 
-    def _check_for_gameover(self):
+    def _check_for_gameover(self) -> None:
         """
         Reads Pygame's events to see if the player wants to quit or if
         the game is over. Executes the gameover hook before closing.
         """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self._before_gameover_hook()
+        if pygame.event.get(pygame.QUIT):
+            self._before_gameover_hook()
 
-            # must come from the play scene
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self._before_gameover_hook()
+        if self.scene_manager.current_scene_captured_quit_event():
+            self._before_gameover_hook()
 
     def _wait_for_next_frame(self):
         """

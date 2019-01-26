@@ -40,21 +40,9 @@ class SceneManager:
         # renders on the screen the updated scene
         self.current_scene.render()
 
-    def get_next_scene(self):
+    def current_scene_captured_quit_event(self):
         """
-        Returns the next scene for the main loop.
+        Method which is called each frame to check if the player wants to
+        quit the game. Checked after the update_current_scene method is called.
         """
-        pass
-
-    def get_level_class(self, world_name, stage_level):
-        """
-        Gets a World class based on the world_name and the stage level.
-
-        Args:
-            world_name (str): the world name (lowercased);
-            stage_level (int): the world stage [0,...]
-
-        Returns
-            (Level): An instance of a world class.
-        """
-        pass
+        return self.current_scene.has_captured_quit_event

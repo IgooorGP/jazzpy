@@ -2,9 +2,9 @@
 Module with the Scene manager which is used to handle
 Menu Scenes, Play Scenes, etc.
 """
-from jazzpy import GAME_SETTINGS
 from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
 from jazzpy.scenes.play_scene import PlayScene
+from jazzpy.settings import game_options
 
 
 class SceneManager:
@@ -19,18 +19,18 @@ class SceneManager:
         """
         # sets a default scene the first game stage
         diamondus_level_one = DiamondusLevelOne(
-            GAME_SETTINGS["folder_settings"]["game_root"]
+            game_options["folder_settings"]["game_root"]
             + "spritesheets/levels/diamondus/diamondus.png",
-            GAME_SETTINGS["folder_settings"]["game_root"]
+            game_options["folder_settings"]["game_root"]
             + "levels/diamondus/diamondus_level_one.txt",
-            GAME_SETTINGS["folder_settings"]["game_root"] + "music/levels/diamondus/diamondus.mp3",
+            game_options["folder_settings"]["game_root"] + "music/levels/diamondus/diamondus.mp3",
             platforms_width=60,
             platforms_height=60,
         )
 
         self.current_scene = PlayScene(diamondus_level_one)
 
-    def update_current_scene(self, screen):
+    def update_current_scene(self):
         """
         Updates the current scene based on a list of Pygame events.
         """
@@ -38,23 +38,11 @@ class SceneManager:
         self.current_scene.update()
 
         # renders on the screen the updated scene
-        self.current_scene.render_on(screen)
+        self.current_scene.render()
 
-    def get_next_scene(self):
+    def current_scene_captured_quit_event(self):
         """
-        Returns the next scene for the main loop.
+        Method which is called each frame to check if the player wants to
+        quit the game. Checked after the update_current_scene method is called.
         """
-        pass
-
-    def get_level_class(self, world_name, stage_level):
-        """
-        Gets a World class based on the world_name and the stage level.
-
-        Args:
-            world_name (str): the world name (lowercased);
-            stage_level (int): the world stage [0,...]
-
-        Returns
-            (Level): An instance of a world class.
-        """
-        pass
+        return self.current_scene.has_captured_quit_event

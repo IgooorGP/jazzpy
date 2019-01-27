@@ -76,6 +76,7 @@ class Camera:
             screen_height (int): game's screen height.
             level_width (int): total width of the level.
             level_height (int): total height of the level.
+            :rtype:
         """
         # holds the initial camera position
         self.offset_x = 0

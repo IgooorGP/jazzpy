@@ -4,7 +4,7 @@ of Jazz the Jack Rabbit.
 """
 import pygame
 
-from jazzpy import GAME_SETTINGS
+from jazzpy.settings import game_options
 from jazzpy.sprites.misc.bullet import Bullet
 from jazzpy.spritesheets.spritesheet import SpriteSheet
 
@@ -61,7 +61,7 @@ class Jazz(pygame.sprite.Sprite):
 
         # loads the sprite_sheet
         self.sprite_sheet = SpriteSheet(
-            GAME_SETTINGS["folder_settings"]["game_root"] + "spritesheets/jazz/jazz.png"
+            game_options["folder_settings"]["game_root"] + "spritesheets/jazz/jazz.png"
         )
 
         # jazz default position
@@ -285,16 +285,12 @@ class Jazz(pygame.sprite.Sprite):
                 if newtime - self.oldtime < 1000:
                     if self.direction == "right":
                         bullet = Bullet(
-                            self.rect.midright[0],
-                            self.rect.midright[1] + 5,
-                            self.direction,
+                            self.rect.midright[0], self.rect.midright[1] + 5, self.direction
                         )
 
                     else:
                         bullet = Bullet(
-                            self.rect.midleft[0],
-                            self.rect.midleft[1] + 5,
-                            self.direction,
+                            self.rect.midleft[0], self.rect.midleft[1] + 5, self.direction
                         )
 
                     self.bullets.add(bullet)

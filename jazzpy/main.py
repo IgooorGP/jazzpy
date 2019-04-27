@@ -4,6 +4,7 @@ Main game module.
 import os
 
 import pygame
+from jazzpy.config.settings import DEBUG
 from jazzpy.config.settings import GAME_ROOT_DIR
 from jazzpy.config.settings import SCREEN_CAPTION
 from jazzpy.config.settings import VIDEO_OPTIONS
@@ -38,8 +39,13 @@ class JazzPy:
         """
         Initializes the game screen.
         """
+        screen_flags = pygame.FULLSCREEN
+
+        if DEBUG:
+            screen_flags = 0
+
         screen = pygame.display.set_mode(
-            (VIDEO_OPTIONS["screen_width"], VIDEO_OPTIONS["screen_height"]), pygame.FULLSCREEN
+            (VIDEO_OPTIONS["screen_width"], VIDEO_OPTIONS["screen_height"]), screen_flags
         )
 
         # caption setting

@@ -62,7 +62,7 @@ class Bullet(pygame.sprite.Sprite):
         """ Detects x-y collisions. """
         for platform in platforms:
 
-            if pygame.sprite.collide_rect(self, platform):
+            if pygame.sprite.collide_rect(self, platform) and platform.is_collidable:
 
                 if speed_x > 0:
 

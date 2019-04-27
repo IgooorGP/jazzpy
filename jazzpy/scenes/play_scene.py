@@ -51,7 +51,7 @@ class PlayScene(Scene):
             self.level.total_level_height,
         )
 
-        self.is_menu_on = False
+        self.has_captured_quit_event = False
 
         # music
         pygame.mixer.music.load(self.level.level_music_file)

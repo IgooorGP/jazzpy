@@ -4,6 +4,8 @@ when the before_gameinit_hook is executed.
 """
 import os
 
+DEBUG = True
+
 SCREEN_CAPTION = "JazzPy - Jazz Jackrabbit by Epic MegaGames (1994) Remake"
 
 VIDEO_OPTIONS = {"max_fps": 60, "screen_width": 800, "screen_height": 600}

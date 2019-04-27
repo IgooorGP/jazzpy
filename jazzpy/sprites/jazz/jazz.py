@@ -111,16 +111,16 @@ class Jazz(pygame.sprite.Sprite):
         """
         Performs sprite changes based on Jazz's movements.
         """
-        if abs(self.speed_x) > 0 and abs(self.speed_x) < 0.4:
+        if 0 < abs(self.speed_x) < 0.4:
             self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_1, dimensions=dimensions)
 
-        if abs(self.speed_x) >= 0.4 and abs(self.speed_x) < 0.8:
+        if 0.4 <= abs(self.speed_x) < 0.8:
             self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_2, dimensions=dimensions)
 
-        if abs(self.speed_x) >= 0.8 and abs(self.speed_x) < 1.2:
+        if 0.8 <= abs(self.speed_x) < 1.2:
             self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_3, dimensions=dimensions)
 
-        if abs(self.speed_x) >= 1.2 and abs(self.speed_x) < 1.5:
+        if 1.2 <= abs(self.speed_x) < 1.5:
             self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_4, dimensions=dimensions)
 
         if abs(self.speed_x) >= 2:
@@ -170,15 +170,15 @@ class Jazz(pygame.sprite.Sprite):
             self.speed_x = 0
 
         if speed_y > 0:
-
             self.rect.bottom = platform_sprite.rect.top
-
             self.is_on_floor = True
             self.is_jumping = False
             self.is_falling = False
             self.speed_y = 0
 
         if speed_y < 0:
+            # TODO: upon top collision and jumping: remove the jumping sprite
+            self.is_jumping = False
             self.rect.top = platform_sprite.rect.bottom
             self.is_falling = True
 
@@ -205,9 +205,8 @@ class Jazz(pygame.sprite.Sprite):
         )
 
         for collision_sprite in collision_sprites:
-
             # same y collision sprite is used for x collision too
-            if candidate_type == "platform":
+            if candidate_type == "platform" and collision_sprite.is_collidable:
 
                 if is_x_axis:
                     self._platform_collision_callback(self.speed_x, 0, collision_sprite)

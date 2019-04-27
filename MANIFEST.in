@@ -1,0 +1,7 @@
+include AUTHORS.md
+include README.md
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+recursive-include jazzpy/static *.css *.js *.jpg *.png *.gifinclude versioneer.py

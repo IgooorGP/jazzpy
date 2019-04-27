@@ -60,6 +60,7 @@ h |					   .             	    |
 
 The offset_y computation is analogous.
 """
+import pygame
 
 
 class Camera:
@@ -67,7 +68,7 @@ class Camera:
     Class to apply offsets to player and other screen objects and sprites.
     """
 
-    def __init__(self, screen_width, screen_height, level_width, level_height):
+    def __init__(self, screen_width: int, screen_height: int, level_width: int, level_height: int):
         """
         Default constructor for a camera object.
 
@@ -76,7 +77,6 @@ class Camera:
             screen_height (int): game's screen height.
             level_width (int): total width of the level.
             level_height (int): total height of the level.
-            :rtype:
         """
         # holds the initial camera position
         self.offset_x = 0
@@ -86,7 +86,7 @@ class Camera:
         self.level_width = level_width
         self.level_height = level_height
 
-    def apply_offset(self, target):
+    def apply_offset(self, target: pygame.sprite.Sprite) -> pygame.Rect:
         """
         Applies an offset to the target rectangle in order to centralize the
         player and display all the objects in a corrected position where the
@@ -106,7 +106,7 @@ class Camera:
         """
         return target.rect.move(self.offset_x, self.offset_y)
 
-    def compute_offset(self, center_target):
+    def compute_offset(self, center_target: pygame.sprite.Sprite) -> None:
         """
         Computes a new offset to be applied to all objects on the camera in
         order to centralize the player at the center and to make other objects

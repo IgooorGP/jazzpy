@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "==19.3b0"
+isort = "*"
+mypy = "*"
+pytest = "*"
+tox = "*"
+pytest-cov = "*"
+coverage = "*"
+coveralls = "*"
+pyinstaller = "*"
+
+[packages]
+pygame = "==1.9.4"
+pyyaml = ">=4.2b1"
+pytest = "*"
+
+[requires]
+python_version = "3.7"

@@ -1,7 +1,6 @@
 """
-Setup module to build distribution packages of regex4ocr.
+Setup module to build distribution packages of jazzpy.
 """
-
 from setuptools import setup
 
 setup(

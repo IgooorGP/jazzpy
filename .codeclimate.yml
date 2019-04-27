@@ -1,0 +1,34 @@
+version: 2
+checks:
+  similar-code:
+    enabled: false
+
+plugins:
+  pep8:
+    enabled: true
+
+  markdownlint:
+    enabled: true
+
+  sonar-python:
+    enabled: true
+    config:
+      sonar.sourceEncoding: UTF-8
+
+  bandit:
+    enabled: true
+    config:
+      python_version: 3
+
+  duplication:
+    enabled: true
+    config:
+      languages:
+        python:
+          python_version: 3
+
+exclude_patterns:
+  - "**/.venv/"
+  - "**/.pytest_cache/"
+  - "**/.tox/"
+  - "**/.dist/"

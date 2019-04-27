@@ -5,10 +5,9 @@ levels of the game.
 from typing import List
 
 import pygame
-
 from jazzpy.camera.camera import Camera
+from jazzpy.config.settings import VIDEO_OPTIONS
 from jazzpy.scenes.abstract_scene import Scene
-from jazzpy.settings import game_options
 from jazzpy.sprites.jazz.jazz import Jazz
 from jazzpy.sprites.misc.hud import Hud
 
@@ -46,8 +45,8 @@ class PlayScene(Scene):
 
         # starts the camera
         self.camera = Camera(
-            game_options["video_settings"]["screen_width"],
-            game_options["video_settings"]["screen_height"] - self.hud.HUD_HEIGHT,
+            VIDEO_OPTIONS["screen_width"],
+            VIDEO_OPTIONS["screen_height"] - self.hud.HUD_HEIGHT,
             self.level.total_level_width,
             self.level.total_level_height,
         )
@@ -165,7 +164,4 @@ class PlayScene(Scene):
         # jazz blitting
         screen.blit(self.jazz.image, self.camera.apply_offset(self.jazz))
 
-        screen.blit(
-            self.hud.image,
-            dest=(0, game_options["video_settings"]["screen_height"] - self.hud.HUD_HEIGHT),
-        )
+        screen.blit(self.hud.image, dest=(0, VIDEO_OPTIONS["screen_height"] - self.hud.HUD_HEIGHT))

@@ -2,9 +2,11 @@
 Module with the class representation
 of Jazz's bullets.
 """
-import pygame
+import os
 
-from jazzpy.settings import game_options
+import pygame
+from jazzpy.config.settings import GAME_ROOT_DIR
+from jazzpy.config.settings import VIDEO_OPTIONS
 from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
@@ -24,12 +26,9 @@ class Hud(pygame.sprite.Sprite):
         super().__init__()
 
         # default position
-        self.sprite_sheet = SpriteSheet(
-            game_options["folder_settings"]["game_root"] + "spritesheets/misc/misc.png"
-        )
+        self.sprite_sheet = SpriteSheet(os.path.join(GAME_ROOT_DIR, "spritesheets/misc/misc.png"))
         self.image = self.sprite_sheet.get_image(
-            self.HUD_SPRITE,
-            dimensions=(game_options["video_settings"]["screen_width"], self.HUD_HEIGHT),
+            self.HUD_SPRITE, dimensions=(VIDEO_OPTIONS["screen_width"], self.HUD_HEIGHT)
         )
 
     def update(self):

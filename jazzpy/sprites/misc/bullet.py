@@ -2,9 +2,10 @@
 Module with the class representation
 of Jazz's bullets.
 """
-import pygame
+import os
 
-from jazzpy.settings import game_options
+import pygame
+from jazzpy.config.settings import GAME_ROOT_DIR
 from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
@@ -32,9 +33,7 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__()
 
         # default position
-        self.sprite_sheet = SpriteSheet(
-            game_options["folder_settings"]["game_root"] + "spritesheets/misc/misc.png"
-        )
+        self.sprite_sheet = SpriteSheet(os.path.join(GAME_ROOT_DIR, "spritesheets/misc/misc.png"))
         self.direction = direction
         self.x, self.y = level_x, level_y
         self.has_hit = False

@@ -1,7 +1,8 @@
 """
 Module with the level loader class.
 """
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 
 from jazzpy.spritesheets.spritesheet import SpriteSheet
 
@@ -20,7 +21,7 @@ class Level(ABC):
         and a spritsheet based on a path to the file.
         """
         self.sprite_sheet = SpriteSheet(spritesheet_file)
-        self.level_file = level_file
+        self.level_platforms_file = level_file
         self.level_music_file = level_music_file
         self.platforms_width = platforms_width
         self.platforms_height = platforms_height
@@ -39,7 +40,7 @@ class Level(ABC):
         """
         line_number = 0
 
-        with open(self.level_file) as fileobj:
+        with open(self.level_platforms_file) as fileobj:
             level_x = 0
             level_y = 0
 
@@ -55,7 +56,7 @@ class Level(ABC):
                     if len(level_char_code) != 2:
                         raise RuntimeError(
                             "Corrupted file level code at line: %s. Check the map file."
-                            % (line_number)
+                            % line_number
                         )
 
                     image = self.level_char_code_to_platform(level_char_code, level_x, level_y)

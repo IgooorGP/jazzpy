@@ -2,9 +2,11 @@
 Module with the Scene manager which is used to handle
 Menu Scenes, Play Scenes, etc.
 """
+import os
+
+from jazzpy.config.settings import GAME_ROOT_DIR
 from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
 from jazzpy.scenes.play_scene import PlayScene
-from jazzpy.settings import game_options
 
 
 class SceneManager:
@@ -18,12 +20,18 @@ class SceneManager:
         first stage of the game.
         """
         # sets a default scene the first game stage
+        level_spritesheet_file = os.path.join(
+            GAME_ROOT_DIR, "spritesheets/levels/diamondus/diamondus.png"
+        )
+        level_platforms_file = os.path.join(
+            GAME_ROOT_DIR, "levels/diamondus/diamondus_level_one.txt"
+        )
+        level_audio_file = os.path.join(GAME_ROOT_DIR, "music/levels/diamondus/diamondus.mp3")
+
         diamondus_level_one = DiamondusLevelOne(
-            game_options["folder_settings"]["game_root"]
-            + "spritesheets/levels/diamondus/diamondus.png",
-            game_options["folder_settings"]["game_root"]
-            + "levels/diamondus/diamondus_level_one.txt",
-            game_options["folder_settings"]["game_root"] + "music/levels/diamondus/diamondus.mp3",
+            level_spritesheet_file,
+            level_platforms_file,
+            level_audio_file,
             platforms_width=60,
             platforms_height=60,
         )

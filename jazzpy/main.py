@@ -1,10 +1,15 @@
 """
 Main game module.
 """
+import os
+
 import pygame
+from jazzpy.config.settings import GAME_ROOT_DIR
 from jazzpy.config.settings import SCREEN_CAPTION
 from jazzpy.config.settings import VIDEO_OPTIONS
+from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
 from jazzpy.scenes.manager import SceneManager
+from jazzpy.scenes.play_scene import PlayScene
 
 
 class JazzPy:
@@ -17,17 +22,19 @@ class JazzPy:
         Initializes pygame, the game clock, the game running state
         and the screen/scene manager.
         """
-        # intializes Pygame
+        # intializes Pygame modules and the mixer module for sound
         pygame.init()
-        pygame.mixer.init()  # iniits mixer module for sound
+        pygame.mixer.init()
 
-        self.screen = self._load_screen(SCREEN_CAPTION)
-        self.scene_manager = SceneManager()
+        # initializes complex objects such as the screen and scene manager
+        self.screen = self._load_screen()
+        self.scene_manager = self._load_scene_manager()
+
         self.clock = pygame.time.Clock()
         self.is_gameover = False
 
     @classmethod
-    def _load_screen(cls, screen_caption):
+    def _load_screen(cls) -> pygame.Surface:
         """
         Initializes the game screen.
         """
@@ -36,11 +43,39 @@ class JazzPy:
         )
 
         # caption setting
-        pygame.display.set_caption(screen_caption)
+        pygame.display.set_caption(SCREEN_CAPTION)
 
         return screen
 
-    def _before_gameover_hook(self):
+    @classmethod
+    def _load_scene_manager(cls) -> SceneManager:
+        """
+        Loads the scene manager with the first scene of the game which could be a menu scene or a play scene.
+        """
+        level_spritesheet_file = os.path.join(
+            GAME_ROOT_DIR, "spritesheets/levels/diamondus/diamondus.png"
+        )
+        level_platforms_file = os.path.join(
+            GAME_ROOT_DIR, "levels/diamondus/diamondus_level_one.txt"
+        )
+        level_audio_file = os.path.join(GAME_ROOT_DIR, "music/levels/diamondus/diamondus.mp3")
+
+        diamondus_level_one = DiamondusLevelOne(
+            level_spritesheet_file,
+            level_platforms_file,
+            level_audio_file,
+            platforms_width=60,
+            platforms_height=60,
+        )
+
+        diamondus_one_scene = PlayScene(diamondus_level_one)
+
+        # Creates the scene manager and loads the first game level: Diamomndus
+        scene_manager = SceneManager(initial_scene=diamondus_one_scene)
+
+        return scene_manager
+
+    def _before_gameover_hook(self) -> None:
         """
         Executes some final code before finally closing the game.
         """
@@ -59,7 +94,7 @@ class JazzPy:
         if self.scene_manager.current_scene_captured_quit_event():
             self._before_gameover_hook()
 
-    def _wait_for_next_frame(self):
+    def _wait_for_next_frame(self) -> None:
         """
         Uses Pygame's Clock to set a time delay before the next frame
         gets updated.
@@ -70,7 +105,7 @@ class JazzPy:
 
         # print("FPS: {fps}".format(fps=self.clock.get_fps()))
 
-    def _update_state(self):
+    def _update_state(self) -> None:
         """
         Updates game state for each frame.
         """
@@ -83,7 +118,7 @@ class JazzPy:
         # updates the whole display
         pygame.display.flip()
 
-    def play(self):
+    def play(self) -> None:
         """
         Public method that starts the main game/event loop.
         """

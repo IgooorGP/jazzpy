@@ -2,11 +2,6 @@
 Module with the Scene manager which is used to handle
 Menu Scenes, Play Scenes, etc.
 """
-import os
-
-from jazzpy.config.settings import GAME_ROOT_DIR
-from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
-from jazzpy.scenes.play_scene import PlayScene
 
 
 class SceneManager:
@@ -14,29 +9,12 @@ class SceneManager:
     Manager for Scene-based classes.
     """
 
-    def __init__(self):
+    def __init__(self, initial_scene):
         """
-        Initializes the Scene Manager with the mocked
-        first stage of the game.
+        Initializes the Scene Manager with the first scene to be displayed which could
+        be a MenuScene, a PlayScene, etc.
         """
-        # sets a default scene the first game stage
-        level_spritesheet_file = os.path.join(
-            GAME_ROOT_DIR, "spritesheets/levels/diamondus/diamondus.png"
-        )
-        level_platforms_file = os.path.join(
-            GAME_ROOT_DIR, "levels/diamondus/diamondus_level_one.txt"
-        )
-        level_audio_file = os.path.join(GAME_ROOT_DIR, "music/levels/diamondus/diamondus.mp3")
-
-        diamondus_level_one = DiamondusLevelOne(
-            level_spritesheet_file,
-            level_platforms_file,
-            level_audio_file,
-            platforms_width=60,
-            platforms_height=60,
-        )
-
-        self.current_scene = PlayScene(diamondus_level_one)
+        self.current_scene = initial_scene
 
     def update_current_scene(self):
         """

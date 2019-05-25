@@ -5,11 +5,11 @@ levels of the game.
 from typing import List
 
 import pygame
-from jazzpy.camera.camera import Camera
 from jazzpy.config.settings import VIDEO_OPTIONS
 from jazzpy.scenes.abstract_scene import Scene
 from jazzpy.sprites.jazz.jazz import Jazz
 from jazzpy.sprites.misc.hud import Hud
+from jazzpy.support.camera import Camera
 
 
 class PlayScene(Scene):

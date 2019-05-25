@@ -6,7 +6,7 @@ import os
 
 import pygame
 from jazzpy.config.settings import PROJECT_ROOT_DIR
-from jazzpy.spritesheets.spritesheet import SpriteSheet
+from jazzpy.support.spritesheet import SpriteSheet
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -34,7 +34,7 @@ class Bullet(pygame.sprite.Sprite):
 
         # default position
         self.sprite_sheet = SpriteSheet(
-            os.path.join(PROJECT_ROOT_DIR, "jazzpy/spritesheets/misc/misc.png")
+            os.path.join(PROJECT_ROOT_DIR, "jazzpy/sprites/misc/spritesheets/misc.png")
         )
         self.direction = direction
         self.x, self.y = level_x, level_y

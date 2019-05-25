@@ -7,7 +7,7 @@ import os
 import pygame
 from jazzpy.config.settings import PROJECT_ROOT_DIR
 from jazzpy.sprites.misc.bullet import Bullet
-from jazzpy.spritesheets.spritesheet import SpriteSheet
+from jazzpy.support.spritesheet import SpriteSheet
 
 
 class Jazz(pygame.sprite.Sprite):
@@ -62,7 +62,7 @@ class Jazz(pygame.sprite.Sprite):
 
         # loads the sprite_sheet
         self.sprite_sheet = SpriteSheet(
-            os.path.join(PROJECT_ROOT_DIR, "jazzpy/spritesheets/jazz/jazz.png")
+            os.path.join(PROJECT_ROOT_DIR, "jazzpy/sprites/jazz/spritesheets/jazz.png")
         )
 
         # jazz default position

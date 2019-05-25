@@ -59,13 +59,13 @@ class JazzPy:
         Loads the scene manager with the first scene of the game which could be a menu scene or a play scene.
         """
         level_spritesheet_file = os.path.join(
-            PROJECT_ROOT_DIR, "jazzpy/spritesheets/levels/diamondus/diamondus.png"
+            PROJECT_ROOT_DIR, "jazzpy/levels/diamondus/spritesheets/diamondus.png"
         )
         level_platforms_file = os.path.join(
-            PROJECT_ROOT_DIR, "jazzpy/levels/diamondus/diamondus_level_one.txt"
+            PROJECT_ROOT_DIR, "jazzpy/levels/diamondus/platform_codes/diamondus_level_one.txt"
         )
         level_music_file = os.path.join(
-            PROJECT_ROOT_DIR, "jazzpy/music/levels/diamondus/diamondus.mp3"
+            PROJECT_ROOT_DIR, "jazzpy/levels/diamondus/music/diamondus.mp3"
         )
 
         diamondus_level_one = DiamondusLevelOne(

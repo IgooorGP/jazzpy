@@ -13,7 +13,7 @@ from jazzpy.config.settings import DEFAULT_SPRITESHEET_NO_PLATFORM_CHARCODE
 from jazzpy.exceptions.levels import CorruptedLevelFile
 from jazzpy.exceptions.levels import MissingJazzInitialPositionOnLevelfile
 from jazzpy.sprites.platforms.platforms import Platform
-from jazzpy.spritesheets.spritesheet import SpriteSheet
+from jazzpy.support.spritesheet import SpriteSheet
 
 
 class Level(ABC):

@@ -7,7 +7,7 @@ import os
 import pygame
 from jazzpy.config.settings import PROJECT_ROOT_DIR
 from jazzpy.config.settings import VIDEO_OPTIONS
-from jazzpy.spritesheets.spritesheet import SpriteSheet
+from jazzpy.support.spritesheet import SpriteSheet
 
 
 class Hud(pygame.sprite.Sprite):
@@ -27,7 +27,7 @@ class Hud(pygame.sprite.Sprite):
 
         # default position
         self.sprite_sheet = SpriteSheet(
-            os.path.join(PROJECT_ROOT_DIR, "jazzpy/spritesheets/misc/misc.png")
+            os.path.join(PROJECT_ROOT_DIR, "jazzpy/sprites/misc/spritesheets/misc.png")
         )
         self.image = self.sprite_sheet.get_image(
             self.HUD_SPRITE, dimensions=(VIDEO_OPTIONS["screen_width"], self.HUD_HEIGHT)

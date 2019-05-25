@@ -5,7 +5,7 @@ import os
 
 import pygame
 from jazzpy.config.settings import DEBUG
-from jazzpy.config.settings import GAME_ROOT_DIR
+from jazzpy.config.settings import PROJECT_ROOT_DIR
 from jazzpy.config.settings import SCREEN_CAPTION
 from jazzpy.config.settings import VIDEO_OPTIONS
 from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
@@ -59,17 +59,20 @@ class JazzPy:
         Loads the scene manager with the first scene of the game which could be a menu scene or a play scene.
         """
         level_spritesheet_file = os.path.join(
-            GAME_ROOT_DIR, "spritesheets/levels/diamondus/diamondus.png"
+            PROJECT_ROOT_DIR, "jazzpy/spritesheets/levels/diamondus/diamondus.png"
         )
         level_platforms_file = os.path.join(
-            GAME_ROOT_DIR, "levels/diamondus/diamondus_level_one.txt"
+            PROJECT_ROOT_DIR, "jazzpy/levels/diamondus/diamondus_level_one.txt"
         )
-        level_audio_file = os.path.join(GAME_ROOT_DIR, "music/levels/diamondus/diamondus.mp3")
+        level_music_file = os.path.join(
+            PROJECT_ROOT_DIR, "jazzpy/music/levels/diamondus/diamondus.mp3"
+        )
 
         diamondus_level_one = DiamondusLevelOne(
-            level_spritesheet_file,
-            level_platforms_file,
-            level_audio_file,
+            spritesheet_file=level_spritesheet_file,
+            spritesheet_matrix_dimensions=(22, 9),
+            level_platforms_file=level_platforms_file,
+            level_music_file=level_music_file,
             platforms_width=60,
             platforms_height=60,
         )

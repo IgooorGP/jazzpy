@@ -3,7 +3,16 @@ Module with the level loader class.
 """
 from abc import ABC
 from abc import abstractmethod
+from typing import List
+from typing import Optional
+from typing import Tuple
 
+from jazzpy.config.settings import DEFAULT_SPRITESHEET_JAZZ_CHARCODE
+from jazzpy.config.settings import DEFAULT_SPRITESHEET_LEVELS_CHARCODE_LENGTH
+from jazzpy.config.settings import DEFAULT_SPRITESHEET_NO_PLATFORM_CHARCODE
+from jazzpy.exceptions.levels import CorruptedLevelFile
+from jazzpy.exceptions.levels import MissingJazzInitialPositionOnLevelfile
+from jazzpy.sprites.platforms.platforms import Platform
 from jazzpy.spritesheets.spritesheet import SpriteSheet
 
 
@@ -14,26 +23,36 @@ class Level(ABC):
     """
 
     def __init__(
-        self, spritesheet_file, level_file, level_music_file, platforms_width, platforms_height
+        self,
+        spritesheet_file: str,
+        level_platforms_file: str,
+        level_music_file: str,
+        platforms_width: int,
+        platforms_height: int,
+        spritesheet_matrix_dimensions: Tuple[int, int] = None,
     ):
         """
         Base constructor of a level with empty platforms
         and a spritsheet based on a path to the file.
         """
-        self.sprite_sheet = SpriteSheet(spritesheet_file)
-        self.level_platforms_file = level_file
+        self.sprite_sheet = SpriteSheet(
+            spritesheet_file, spritesheet_matrix_dimensions=spritesheet_matrix_dimensions
+        )
+        self.level_platforms_file = level_platforms_file
         self.level_music_file = level_music_file
         self.platforms_width = platforms_width
         self.platforms_height = platforms_height
         self.jazz_initial_x = -1
         self.jazz_initial_y = -1
+        self.jazz_level_char_code = DEFAULT_SPRITESHEET_JAZZ_CHARCODE
+        self.no_platform_level_char_code = DEFAULT_SPRITESHEET_NO_PLATFORM_CHARCODE
 
         # filled after parse_level invocation
         self.total_level_width = 0
         self.total_level_height = 0
-        self.platforms = []
+        self.platforms: List[Platform] = []
 
-    def build(self):
+    def build(self) -> None:
         """
         Parses level files to convert level_char_codes into
         platform objects (pygame.Sprites).
@@ -49,20 +68,21 @@ class Level(ABC):
                 line_number += 1
                 line = line.strip("\r\n\t")
 
-                for i in range(0, len(line), 2):
+                for i in range(0, len(line), DEFAULT_SPRITESHEET_LEVELS_CHARCODE_LENGTH):
 
-                    level_char_code = line[i : i + 2]  # reads two letters
+                    level_char_code = line[
+                        i : i + DEFAULT_SPRITESHEET_LEVELS_CHARCODE_LENGTH
+                    ]  # reads the configured amount of characters
 
-                    if len(level_char_code) != 2:
-                        raise RuntimeError(
-                            "Corrupted file level code at line: %s. Check the map file."
-                            % line_number
+                    if len(level_char_code) != DEFAULT_SPRITESHEET_LEVELS_CHARCODE_LENGTH:
+                        raise CorruptedLevelFile(
+                            f"Corrupted file level code at line: {line_number}. Check the level file."
                         )
 
-                    image = self.level_char_code_to_platform(level_char_code, level_x, level_y)
+                    platform = self.level_char_code_to_platform(level_char_code, level_x, level_y)
 
-                    if image is not None:
-                        self.platforms.append(image)
+                    if platform is not None:
+                        self.platforms.append(platform)
 
                     level_x += self.platforms_width
 
@@ -77,12 +97,12 @@ class Level(ABC):
             self.total_level_height = level_y
 
         if self.jazz_initial_x == -1 or self.jazz_initial_y == -1:
-            raise RuntimeError(
+            raise MissingJazzInitialPositionOnLevelfile(
                 "Unable to find jazz's initial position on the level. Check the map file."
             )
 
     @abstractmethod
-    def level_char_code_to_platform(self, level_char_code, level_x, level_y):
+    def level_char_code_to_platform(self, level_char_code, level_x, level_y) -> Optional[Platform]:
         """
         Abstract method for Mapping from level character to an actual pygame.Sprite object
         """

@@ -8,9 +8,9 @@ All the sprite sheets, fictional names, images and soundtracks used in this soft
 and are, by no means, mine. All the images, character names, stage names, other fictional names and the soundtracks belong
 to Epic MegaGames (Epic Games).
 
-## Gameplay Example
+## Gameplay
 
-![alt-text](/docs/jazz_play.gif)
+![alt-text](docs/gifs/jazzpy_gameplay.gif)
 
 ## Built with
 

@@ -119,7 +119,7 @@ class JazzPy:
         Updates game state for each frame.
         """
         # clears screen before next update
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((0, 64, 255))
 
         # updates the scene based on user event
         self.scene_manager.update_current_scene()

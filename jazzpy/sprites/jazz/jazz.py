@@ -5,7 +5,22 @@ of Jazz the Jack Rabbit.
 import os
 
 import pygame
-from jazzpy.config.settings import PROJECT_ROOT_DIR
+from jazzpy.settings.general import PROJECT_ROOT_DIR
+from jazzpy.settings.jazz import DEFAULT_POSITION_SPRITE
+from jazzpy.settings.jazz import FALLING_SPRITE_1
+from jazzpy.settings.jazz import JAZZ_DIMENSIONS
+from jazzpy.settings.jazz import JUMPING_SPRITE_1
+from jazzpy.settings.jazz import RUNNING_SPRITES
+from jazzpy.settings.jazz import SHOOTING_SPRITE_1
+from jazzpy.settings.jazz import WALKING_SPRITE_1
+from jazzpy.settings.jazz import WALKING_SPRITE_2
+from jazzpy.settings.jazz import WALKING_SPRITE_3
+from jazzpy.settings.jazz import WALKING_SPRITE_4
+from jazzpy.settings.physics import ACCELERATION_X
+from jazzpy.settings.physics import GRAVITY_SPEED
+from jazzpy.settings.physics import INITIAL_JUMP_Y_SPEED
+from jazzpy.settings.physics import INITIAL_SHOOTING_DELAY
+from jazzpy.settings.physics import MAX_SPEED_X
 from jazzpy.sprites.misc.bullet import Bullet
 from jazzpy.support.spritesheet import SpriteSheet
 
@@ -14,44 +29,6 @@ class Jazz(pygame.sprite.Sprite):
     """
     Jazz's class.
     """
-
-    # http://getspritexy.com/
-    JAZZ_DIMENSIONS = (60, 60)
-    DEFAULT_POSITION_SPRITE = (16, 22, 37, 32)
-
-    WALKING_SPRITE_1 = (16, 60, 37, 32)
-    WALKING_SPRITE_2 = (53, 59, 37, 32)
-    WALKING_SPRITE_3 = (87, 59, 37, 32)
-    WALKING_SPRITE_4 = (121, 58, 37, 32)
-    WALKING_SPRITE_5 = (155, 58, 37, 32)
-    WALKING_SPRITE_6 = (191, 58, 37, 32)
-
-    RUNNING_SRITE_1 = (16, 95, 37, 32)
-    RUNNING_SRITE_2 = (54, 95, 37, 32)
-    RUNNING_SRITE_3 = (87, 95, 37, 32)
-    RUNNING_SRITE_4 = (125, 95, 37, 32)
-
-    RUNNING_SPRITES = (RUNNING_SRITE_1, RUNNING_SRITE_2, RUNNING_SRITE_3, RUNNING_SRITE_4)
-
-    BUMP_SPRITE = (160, 95, 37, 37)
-
-    SHOOTING_SPRITE_1 = (157, 130, 37, 32)
-
-    LOOKING_DOWN_SPRITE_1 = (88, 131, 37, 32)
-    LOOKING_UP_SPRITE_1 = (15, 131, 37, 32)
-
-    JUMPING_SPRITE_1 = (16, 207, 37, 32)
-    FALLING_SPRITE_1 = (52, 207, 37, 32)
-
-    HURT_SPRITE_1 = (159, 245, 37, 37)
-    HURT_SPRITE_2 = (194, 244, 37, 37)
-    HURT_SPRITE_3 = (230, 244, 37, 37)
-
-    MAX_SPEED_X = 15
-    ACCELERATION_X = 0.5
-    INITIAL_JUMP_Y_SPEED = 20  # y coord is negative!
-    GRAVITY_SPEED = 1.0
-    INITIAL_SHOOTING_DELAY = 200
 
     def __init__(self, level_x, level_y):
         """
@@ -71,7 +48,7 @@ class Jazz(pygame.sprite.Sprite):
 
         # jazz surface creation from the spritesheet with given width/height
         self.image = self.sprite_sheet.get_image(
-            self.DEFAULT_POSITION_SPRITE, dimensions=self.JAZZ_DIMENSIONS
+            DEFAULT_POSITION_SPRITE, dimensions=JAZZ_DIMENSIONS
         )
 
         # jazz rectangle creation for collision detection
@@ -100,7 +77,7 @@ class Jazz(pygame.sprite.Sprite):
         movement sensation.
         """
 
-        tpl_sprite = self.RUNNING_SPRITES[self.current_running_sprite]
+        tpl_sprite = RUNNING_SPRITES[self.current_running_sprite]
 
         self.current_running_sprite += 1
         self.current_running_sprite = (
@@ -114,16 +91,16 @@ class Jazz(pygame.sprite.Sprite):
         Performs sprite changes based on Jazz's movements.
         """
         if 0 < abs(self.speed_x) < 0.4:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(WALKING_SPRITE_1, dimensions=dimensions)
 
         if 0.4 <= abs(self.speed_x) < 0.8:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_2, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(WALKING_SPRITE_2, dimensions=dimensions)
 
         if 0.8 <= abs(self.speed_x) < 1.2:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_3, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(WALKING_SPRITE_3, dimensions=dimensions)
 
         if 1.2 <= abs(self.speed_x) < 1.5:
-            self.image = self.sprite_sheet.get_image(self.WALKING_SPRITE_4, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(WALKING_SPRITE_4, dimensions=dimensions)
 
         if abs(self.speed_x) >= 2:
             # self.image = self.sprite_sheet.get_image(self.RUNNING_SRITE_1)
@@ -132,18 +109,16 @@ class Jazz(pygame.sprite.Sprite):
             )
 
         if self.speed_x == 0:
-            self.image = self.sprite_sheet.get_image(
-                self.DEFAULT_POSITION_SPRITE, dimensions=dimensions
-            )
+            self.image = self.sprite_sheet.get_image(DEFAULT_POSITION_SPRITE, dimensions=dimensions)
 
         if self.is_jumping:
-            self.image = self.sprite_sheet.get_image(self.JUMPING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(JUMPING_SPRITE_1, dimensions=dimensions)
 
         if self.is_falling:
-            self.image = self.sprite_sheet.get_image(self.FALLING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(FALLING_SPRITE_1, dimensions=dimensions)
 
         if self.is_shooting and not self.is_falling and not self.is_jumping and not self.is_running:
-            self.image = self.sprite_sheet.get_image(self.SHOOTING_SPRITE_1, dimensions=dimensions)
+            self.image = self.sprite_sheet.get_image(SHOOTING_SPRITE_1, dimensions=dimensions)
 
         # always, in the end, change flip the sprite
         if self.direction == "left":
@@ -224,26 +199,26 @@ class Jazz(pygame.sprite.Sprite):
         if right:
             self.is_running = True
             self.direction = "right"
-            self.speed_x += self.ACCELERATION_X
+            self.speed_x += ACCELERATION_X
 
-            if self.speed_x > self.MAX_SPEED_X:
-                self.speed_x = self.MAX_SPEED_X
+            if self.speed_x > MAX_SPEED_X:
+                self.speed_x = MAX_SPEED_X
 
         elif left:
             self.is_running = True
             self.direction = "left"
-            self.speed_x -= self.ACCELERATION_X
+            self.speed_x -= ACCELERATION_X
 
-            if abs(self.speed_x) > self.MAX_SPEED_X:
-                self.speed_x = -self.MAX_SPEED_X
+            if abs(self.speed_x) > MAX_SPEED_X:
+                self.speed_x = -MAX_SPEED_X
 
         elif not (left or right):
             if self.speed_x > 0:
-                self.speed_x -= 2 * self.ACCELERATION_X
+                self.speed_x -= 2 * ACCELERATION_X
                 self.speed_x = 0 if self.speed_x < 0 else self.speed_x
 
             if self.speed_x < 0:
-                self.speed_x += 2 * self.ACCELERATION_X
+                self.speed_x += 2 * ACCELERATION_X
                 self.speed_x = 0 if self.speed_x > 0 else self.speed_x
 
             if self.speed_x == 0:
@@ -259,11 +234,11 @@ class Jazz(pygame.sprite.Sprite):
         """
         if alt and self.is_on_floor:
             self.is_jumping = True
-            self.speed_y = -self.INITIAL_JUMP_Y_SPEED  # negative for moving up!
+            self.speed_y = -INITIAL_JUMP_Y_SPEED  # negative for moving up!
 
         # updates y position
         if not self.is_on_floor:
-            self.speed_y += self.GRAVITY_SPEED  # reduces speed (adds +)
+            self.speed_y += GRAVITY_SPEED  # reduces speed (adds +)
 
         self.is_on_floor = False
 
@@ -280,7 +255,7 @@ class Jazz(pygame.sprite.Sprite):
 
             newtime = pygame.time.get_ticks()
 
-            if self.oldtime == 0 or newtime - self.oldtime > self.INITIAL_SHOOTING_DELAY:
+            if self.oldtime == 0 or newtime - self.oldtime > INITIAL_SHOOTING_DELAY:
 
                 if newtime - self.oldtime < 1000:
                     if self.direction == "right":

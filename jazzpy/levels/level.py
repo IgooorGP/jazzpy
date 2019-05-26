@@ -7,11 +7,11 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
-from jazzpy.config.settings import DEFAULT_SPRITESHEET_JAZZ_CHARCODE
-from jazzpy.config.settings import DEFAULT_SPRITESHEET_LEVELS_CHARCODE_LENGTH
-from jazzpy.config.settings import DEFAULT_SPRITESHEET_NO_PLATFORM_CHARCODE
 from jazzpy.exceptions.levels import CorruptedLevelFile
 from jazzpy.exceptions.levels import MissingJazzInitialPositionOnLevelfile
+from jazzpy.settings.levels import DEFAULT_SPRITESHEET_JAZZ_CHARCODE
+from jazzpy.settings.levels import DEFAULT_SPRITESHEET_LEVELS_CHARCODE_LENGTH
+from jazzpy.settings.levels import DEFAULT_SPRITESHEET_NO_PLATFORM_CHARCODE
 from jazzpy.sprites.platforms.platforms import Platform
 from jazzpy.support.spritesheet import SpriteSheet
 

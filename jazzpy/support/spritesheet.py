@@ -5,10 +5,10 @@ images from a spritesheet.
 from typing import Tuple
 
 import pygame
-from jazzpy.config.settings import DEFAULT_SPRITESHEET_TILE_DIMENSIONS
 from jazzpy.exceptions.spritesheets import SpritesheetImpossibleMatrixColumnRequired
 from jazzpy.exceptions.spritesheets import SpritesheetImpossibleMatrixRowRequired
 from jazzpy.exceptions.spritesheets import SpritesheetMatrixDimensionsNotConfigured
+from jazzpy.settings.levels import DEFAULT_SPRITESHEET_TILE_DIMENSIONS
 
 
 class SpriteSheet:

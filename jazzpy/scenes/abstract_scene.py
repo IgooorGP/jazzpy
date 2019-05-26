@@ -11,8 +11,7 @@ import pygame
 
 class Scene(ABC):
     """
-    Abstract base class for creating scenes
-    of the game.
+    Abstract base class for creating scenes of the game.
     """
 
     def __init__(self):

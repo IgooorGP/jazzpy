@@ -5,8 +5,10 @@ of Jazz's bullets.
 import os
 
 import pygame
-from jazzpy.config.settings import PROJECT_ROOT_DIR
-from jazzpy.config.settings import VIDEO_OPTIONS
+from jazzpy.settings.general import PROJECT_ROOT_DIR
+from jazzpy.settings.general import VIDEO_OPTIONS
+from jazzpy.settings.hud import HUD_HEIGHT
+from jazzpy.settings.hud import HUD_SPRITE
 from jazzpy.support.spritesheet import SpriteSheet
 
 
@@ -14,10 +16,6 @@ class Hud(pygame.sprite.Sprite):
     """
     Bullet class.
     """
-
-    HUD_WIDTH = 100
-    HUD_HEIGHT = 80
-    HUD_SPRITE = (26, 1051, 319, 32)
 
     def __init__(self):
         """
@@ -30,7 +28,7 @@ class Hud(pygame.sprite.Sprite):
             os.path.join(PROJECT_ROOT_DIR, "jazzpy/sprites/misc/spritesheets/misc.png")
         )
         self.image = self.sprite_sheet.get_image(
-            self.HUD_SPRITE, dimensions=(VIDEO_OPTIONS["screen_width"], self.HUD_HEIGHT)
+            HUD_SPRITE, dimensions=(VIDEO_OPTIONS["screen_width"], HUD_HEIGHT)
         )
 
     def update(self):

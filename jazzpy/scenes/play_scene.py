@@ -5,8 +5,11 @@ levels of the game.
 from typing import List
 
 import pygame
-from jazzpy.config.settings import VIDEO_OPTIONS
 from jazzpy.scenes.abstract_scene import Scene
+from jazzpy.settings.general import VIDEO_OPTIONS
+from jazzpy.settings.hud import HUD_HEIGHT
+from jazzpy.settings.scenes import BLITTING_X_EXTENSION
+from jazzpy.settings.scenes import BLITTING_Y_EXTENSION
 from jazzpy.sprites.jazz.jazz import Jazz
 from jazzpy.sprites.misc.hud import Hud
 from jazzpy.support.camera import Camera
@@ -14,14 +17,8 @@ from jazzpy.support.camera import Camera
 
 class PlayScene(Scene):
     """
-    Scene class implementation for play scenes
-    of the game.
+    Scene class implementation for play scenes of the game.
     """
-
-    # extra x, y range for blitting so that players
-    # won't notice black squares at the camera edges
-    BLITTING_X_EXTENSION = 200
-    BLITTING_Y_EXTENSION = 200
 
     def __init__(self, level):
         """
@@ -46,7 +43,7 @@ class PlayScene(Scene):
         # starts the camera
         self.camera = Camera(
             VIDEO_OPTIONS["screen_width"],
-            VIDEO_OPTIONS["screen_height"] - self.hud.HUD_HEIGHT,
+            VIDEO_OPTIONS["screen_height"] - HUD_HEIGHT,
             self.level.total_level_width,
             self.level.total_level_height,
         )
@@ -144,10 +141,10 @@ class PlayScene(Scene):
         self.camera.compute_offset(self.jazz)
 
         screen_platforms = self._filter_sprites_out_of_screen(
-            self.level.platforms, self.BLITTING_X_EXTENSION, self.BLITTING_Y_EXTENSION
+            self.level.platforms, BLITTING_X_EXTENSION, BLITTING_Y_EXTENSION
         )
         screen_bullets = self._filter_sprites_out_of_screen(
-            self.jazz.bullets.sprites(), self.BLITTING_X_EXTENSION, self.BLITTING_Y_EXTENSION
+            self.jazz.bullets.sprites(), BLITTING_X_EXTENSION, BLITTING_Y_EXTENSION
         )
 
         # attempt grey filter on platforms
@@ -164,4 +161,4 @@ class PlayScene(Scene):
         # jazz blitting
         screen.blit(self.jazz.image, self.camera.apply_offset(self.jazz))
 
-        screen.blit(self.hud.image, dest=(0, VIDEO_OPTIONS["screen_height"] - self.hud.HUD_HEIGHT))
+        screen.blit(self.hud.image, dest=(0, VIDEO_OPTIONS["screen_height"] - HUD_HEIGHT))

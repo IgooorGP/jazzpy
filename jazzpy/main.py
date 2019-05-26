@@ -4,13 +4,13 @@ Main game module.
 import os
 
 import pygame
-from jazzpy.config.settings import DEBUG
-from jazzpy.config.settings import PROJECT_ROOT_DIR
-from jazzpy.config.settings import SCREEN_CAPTION
-from jazzpy.config.settings import VIDEO_OPTIONS
 from jazzpy.levels.diamondus.diamondus_level_one import DiamondusLevelOne
 from jazzpy.scenes.manager import SceneManager
 from jazzpy.scenes.play_scene import PlayScene
+from jazzpy.settings.general import DEBUG
+from jazzpy.settings.general import PROJECT_ROOT_DIR
+from jazzpy.settings.general import SCREEN_CAPTION
+from jazzpy.settings.general import VIDEO_OPTIONS
 
 
 class JazzPy:

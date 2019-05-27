@@ -68,6 +68,11 @@ class Jazz(pygame.sprite.Sprite):
         self.direction = "right"
         self.current_running_sprite = 0
 
+        # HUD data
+        self.health = 5
+        self.current_weapon = "blaster"
+        self.lives = 1
+
         # shooting delay
         self.oldtime = 0
 

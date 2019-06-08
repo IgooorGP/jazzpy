@@ -34,11 +34,11 @@ class PlayScene(Scene):
         self.level = level
         self.level.build()
 
-        # gets jazz
-        self.jazz = Jazz(level.jazz_initial_x, level.jazz_initial_y)
-
         # game HUD
         self.hud = Hud()
+
+        # gets jazz
+        self.jazz = Jazz(level.jazz_initial_x, level.jazz_initial_y, self.hud)
 
         # starts the camera
         self.camera = Camera(

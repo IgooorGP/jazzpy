@@ -3,8 +3,10 @@ Module with the class representation
 of Jazz's bullets.
 """
 import os
+from typing import Dict
 
 import pygame
+from jazzpy.interfaces.observable import ObserverMixin
 from jazzpy.settings.general import PROJECT_ROOT_DIR
 from jazzpy.settings.general import VIDEO_OPTIONS
 from jazzpy.settings.hud import HUD_HEIGHT
@@ -12,9 +14,9 @@ from jazzpy.settings.hud import HUD_SPRITE
 from jazzpy.support.spritesheet import SpriteSheet
 
 
-class Hud(pygame.sprite.Sprite):
+class Hud(pygame.sprite.Sprite, ObserverMixin):
     """
-    Bullet class.
+    HUD of the game which is an observer of the Jazz state.
     """
 
     def __init__(self):
@@ -31,5 +33,9 @@ class Hud(pygame.sprite.Sprite):
             HUD_SPRITE, dimensions=(VIDEO_OPTIONS["screen_width"], HUD_HEIGHT)
         )
 
-    def update(self):
-        pass
+    def update(self, observable_state: Dict, observable_id: str):
+        """
+        Updates the HUD based on the observable states.
+        """
+        # TODO: Find a way to update the HUD sprite based on the received data
+        print(f"Received an update: {observable_id}: {observable_state}")

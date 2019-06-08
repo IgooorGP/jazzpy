@@ -5,6 +5,8 @@ of Jazz the Jack Rabbit.
 import os
 
 import pygame
+from jazzpy.interfaces.observable import ObservableMixin
+from jazzpy.settings.general import JAZZ_OBSERVABLE_ID
 from jazzpy.settings.general import PROJECT_ROOT_DIR
 from jazzpy.settings.jazz import DEFAULT_POSITION_SPRITE
 from jazzpy.settings.jazz import FALLING_SPRITE_1
@@ -22,25 +24,30 @@ from jazzpy.settings.physics import INITIAL_JUMP_Y_SPEED
 from jazzpy.settings.physics import INITIAL_SHOOTING_DELAY
 from jazzpy.settings.physics import MAX_SPEED_X
 from jazzpy.sprites.misc.bullet import Bullet
+from jazzpy.sprites.misc.hud import Hud
 from jazzpy.support.spritesheet import SpriteSheet
 
 
-class Jazz(pygame.sprite.Sprite):
+class Jazz(pygame.sprite.Sprite, ObservableMixin):
     """
     Jazz's class.
     """
 
-    def __init__(self, level_x, level_y):
+    def __init__(self, level_x: int, level_y: int, hud: Hud):
         """
         Default constructor for the Jazz JackRabbit character class.
         """
         # super class init
-        super().__init__()
+        super(pygame.sprite.Sprite, self).__init__()
+        super(ObservableMixin, self).__init__()
 
         # loads the sprite_sheet
         self.sprite_sheet = SpriteSheet(
             os.path.join(PROJECT_ROOT_DIR, "jazzpy/sprites/jazz/spritesheets/jazz.png")
         )
+
+        # adds hud as an observer of Jazz's state
+        self.add_observer(hud)
 
         # jazz default position
         self.speed_x, self.speed_y = 0, 0
@@ -72,6 +79,7 @@ class Jazz(pygame.sprite.Sprite):
         self.health = 5
         self.current_weapon = "blaster"
         self.lives = 1
+        self.player_score = 0
 
         # shooting delay
         self.oldtime = 0
@@ -288,3 +296,14 @@ class Jazz(pygame.sprite.Sprite):
         self._detect_collision(platforms, "platform", is_x_axis=False)
 
         self._change_shooting_state(space)
+
+        # updates the HUD with Jazz's data
+        observable_state = {
+            "lives": self.lives,
+            "world": 1,  # hardcoded for now
+            "current_weapon": self.current_weapon,
+            "health": self.health,
+            "player_score": self.player_score,
+        }
+
+        self._notify_observers(observable_state=observable_state, observable_id=JAZZ_OBSERVABLE_ID)

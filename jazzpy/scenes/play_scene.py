@@ -160,5 +160,4 @@ class PlayScene(Scene):
 
         # jazz blitting
         screen.blit(self.jazz.image, self.camera.apply_offset(self.jazz))
-
         screen.blit(self.hud.image, dest=(0, VIDEO_OPTIONS["screen_height"] - HUD_HEIGHT))

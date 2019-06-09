@@ -6,11 +6,11 @@ import os
 
 import pygame
 from jazzpy.interfaces.observable import ObservableMixin
-from jazzpy.settings.general import JAZZ_OBSERVABLE_ID
 from jazzpy.settings.general import PROJECT_ROOT_DIR
 from jazzpy.settings.jazz import DEFAULT_POSITION_SPRITE
 from jazzpy.settings.jazz import FALLING_SPRITE_1
 from jazzpy.settings.jazz import JAZZ_DIMENSIONS
+from jazzpy.settings.jazz import JAZZ_OBSERVABLE_ID
 from jazzpy.settings.jazz import JUMPING_SPRITE_1
 from jazzpy.settings.jazz import RUNNING_SPRITES
 from jazzpy.settings.jazz import SHOOTING_SPRITE_1
